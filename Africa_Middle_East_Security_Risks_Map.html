@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Africa &amp; Middle East Destination Security Risks &mdash; Updated March 2026</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; }
+  header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0dc;
+    padding: 14px 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  header h1 { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  header span { font-size: 12px; color: #888; }
+  #map { width: 100%; height: calc(100vh - 49px); }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.14) !important;
+    padding: 0 !important;
+  }
+  .leaflet-popup-content { margin: 0 !important; }
+  .leaflet-popup-tip-container { margin-top: -1px; }
+
+  .pw {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    width: 340px;
+    max-height: 480px;
+    overflow-y: auto;
+    padding: 14px 16px;
+  }
+  .pw::-webkit-scrollbar { width: 4px; }
+  .pw::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+
+  .pc { font-size: 15px; font-weight: 600; color: #1a1a1a; margin: 0 0 2px; }
+  .pco { font-size: 12px; color: #888; margin: 0 0 10px; }
+
+  .pr {
+    display: flex;
+    gap: 9px;
+    padding: 8px 0;
+    border-top: 0.5px solid #e8e8e6;
+    align-items: flex-start;
+  }
+  .pn {
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: #185FA5;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .pn.u { background: #8B0000; }
+  .pn.n { background: #3B6D11; }
+
+  .pt { font-size: 12px; color: #1a1a1a; line-height: 1.45; }
+  .ptitle { font-weight: 600; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .bu { background: #FAECE7; color: #993C1D; }
+  .bn { background: #EAF3DE; color: #3B6D11; }
+  .ph { font-size: 11px; color: #666; margin-top: 3px; }
+  .pm { font-size: 11px; color: #666; margin-top: 3px; font-style: italic; line-height: 1.45; }
+
+  .legend {
+    background: #fff;
+    border: 0.5px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+  .legend-title { font-weight: 600; margin-bottom: 7px; color: #1a1a1a; }
+  .legend-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; color: #555; }
+  .legend-row:last-of-type { margin-bottom: 0; }
+  .legend-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; }
+  .legend-note {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 0.5px solid #e8e8e6;
+    color: #888;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Africa &amp; Middle East Destination Security Risks</h1>
+  <span>Updated March 20, 2026 &mdash; United Airlines destinations &mdash; Click any pin to view risks</span>
+</header>
+
+<div id="map"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const cities = [
+
+  // ── GHANA ─────────────────────────────────────────────────────────────────
+  { name: "Accra", code: "ACC", country: "Ghana", lat: 5.603, lng: -0.187, risks: [
+    { t: "Armed street robberies in commercial and transport areas",
+      h: "Makola Market, Kaneshie bus station, Osu Oxford Street",
+      m: "Avoid crowded hotspots at night, use secure taxis, and keep valuables discreet." },
+    { t: "Bag-snatching and pickpocketing in busy pedestrian zones",
+      h: "High Street, Oxford Street shops in Osu",
+      m: "Use zipped crossbody bags, avoid using phones openly in crowds." },
+    { t: "Cyber and financial scams targeting tourists and business travellers", f: "u",
+      h: "Hotels with Wi-Fi, internet caf\u00e9s around Labone and Cantonments",
+      m: "Use VPNs on public Wi-Fi; monitor card transactions; avoid clicking unsolicited links. AI-powered phishing scams and investment fraud are rising across West Africa; never respond to unsolicited online financial offers or share banking credentials over public networks." },
+    { t: "Mob protests and local unrest due to economic or political triggers",
+      h: "Near Jubilee House, Ministries Avenue, large public squares",
+      m: "Avoid demonstrations, track local media alerts, and reroute if crowds gather." },
+    { t: "Risk of extremist infiltration via Ghana\u2019s northern corridor", f: "u",
+      h: "Supply hubs near Accra\u2019s northern transit routes; border communities in Upper East and Upper West regions",
+      m: "Stay alert in transit hubs and report suspicious activity. The GI-TOC 2025 report confirms a southward drift of extremist economies from the Sahel into Ghana; Burkina Faso (ranked #1 on the 2025 Global Terrorism Index) shares a border with Ghana. Ghana hosted a major international counter-terrorism conference in Accra in January 2026. President Mahama\u2019s February 2026 State of the Nation Address launched the Northern Border Security Project as Ghana\u2019s first line of defence against extremist infiltration." }
+  ]},
+
+  // ── ISRAEL ────────────────────────────────────────────────────────────────
+  { name: "Tel Aviv", code: "TLV", country: "Israel", lat: 32.086, lng: 34.789, risks: [
+    { t: "Rocket, missile, and armed UAV attacks on civilian areas", f: "u",
+      h: "Entire Tel Aviv metropolitan area; public transport hubs; beachfront promenades",
+      m: "On 27 February 2026, the U.S. State Dept authorised departure of non-emergency government personnel from Israel; Israel is at U.S. Level 3 (Reconsider Travel). In February 2026, three bombs exploded on three separate buses in the Tel Aviv area and a ramming and stabbing attack near Haifa killed one person and injured 12. Download the Home Front Command Red Alert app for real-time rocket and missile alerts. Know the location of the nearest bomb shelter before travelling anywhere in the city." },
+    { t: "Terror attacks targeting tourist locations and transport hubs", f: "u",
+      h: "Carmel Market, beachfront promenades, Rothschild Boulevard, public buses",
+      m: "Terrorist groups, lone-actor terrorists, and violent extremists continue plotting attacks with little or no warning, targeting tourist locations, transportation hubs, markets, shopping malls, and local government facilities. Maintain heightened situational awareness at all times; avoid unattended bags and follow government security alerts." },
+    { t: "Flight cancellations and airspace disruptions", f: "n",
+      h: "Ben Gurion Airport (TLV), airport access roads",
+      m: "Increased regional tensions have caused multiple airlines to cancel, suspend, or curtail flights into and out of Israel at short notice. Confirm your flight status 48 hours before departure. The U.S. Embassy has advised citizens who can secure a commercial flight to leave while flights are available. Purchase comprehensive travel insurance including trip cancellation and medical evacuation." },
+    { t: "Security checkpoints and ID inspections near major institutions",
+      h: "Near Azrieli Center, airports, embassies",
+      m: "Carry valid ID at all times. The ETA-IL electronic travel authorisation has been mandatory for visa-exempt visitors since 1 January 2025 \u2014 apply at least 72 hours before travel. Arrive early and comply calmly with security procedures." },
+    { t: "Flash demonstrations linked to regional tensions and anniversaries",
+      h: "Habima Square, Rabin Square, near the Knesset building",
+      m: "Monitor real-time updates; avoid protest zones; reroute as necessary. Risk of protests increases around significant dates including the 7 October anniversary, Independence Day (14 May), Jerusalem Day, and religious holidays." }
+  ]},
+
+  // ── MOROCCO ───────────────────────────────────────────────────────────────
+  { name: "Marrakesh", code: "RAK", country: "Morocco", lat: 31.629, lng: -7.987, risks: [
+    { t: "Pickpocketing and street scams in medina and souks",
+      h: "Jemaa el-Fna square, Medina alleys, souk entrances",
+      m: "Guard valuables in front pockets, be cautious of staged distractions, and avoid accepting unsolicited help. Common scams include snake charmers placing animals on visitors before demanding payment, and women grabbing hands to begin henna tattoos without prior agreement." },
+    { t: "Bogus guide and donation solicitation scams",
+      h: "Outside Koutoubia Mosque, near Bahia Palace",
+      m: "Hire only licensed guides (badge visible); decline informal offers with politeness. The \u2018faux guide\u2019 phenomenon is Morocco\u2019s most common tourist scam \u2014 unofficial guides claim attractions are closed and offer to take visitors to a \u2018family shop\u2019 instead." },
+    { t: "Credit card skimming or POS fraud in boutique caf\u00e9s", f: "u",
+      h: "Upscale caf\u00e9s along Avenue Mohamed V and Gu\u00e9liz district",
+      m: "Prefer cash for small purchases; inspect POS devices; use chip/tap methods. Cyber scams have increased across Morocco since 2025; ensure you are connected to legitimate Wi-Fi networks and avoid unsolicited emails or SMS claiming account issues." },
+    { t: "Opportunistic assaults in isolated nighttime areas",
+      h: "Peripheral roads near Palmeraie and Gu\u00e9liz late at night",
+      m: "Avoid dim areas, travel in pairs, and request taxi drop-off near main roads." },
+    { t: "Terrorism-related alerts near tourist hubs",
+      h: "Majorelle Garden, Marrakesh Menara Airport, prominent hotels",
+      m: "Maintain situational awareness in crowded zones and follow local official advisories. Morocco remains at U.S. Level 2 (Exercise Increased Caution) due to terrorism. Morocco has had no significant terrorist incident since 2011 and security forces maintain a strong visible presence in tourist zones." }
+  ]},
+
+  // ── NIGERIA ───────────────────────────────────────────────────────────────
+  { name: "Lagos", code: "LOS", country: "Nigeria", lat: 6.455, lng: 3.384, risks: [
+    { t: "Street crime and armed robbery in open districts", f: "u",
+      h: "Lekki Phase 1, Mushin, Ojuelegba at night",
+      m: "Avoid walking after dark; use trusted taxis or ride-hailing apps (Bolt and Uber are widely available in Lagos) and vary routes. Lagos has been placed on Forbes Advisor\u2019s top 10 riskiest places globally for tourists; Victoria Island, Ikoyi, and Lekki maintain international security standards and are the safest zones for visitors." },
+    { t: "Express kidnappings and abduction-for-ransom", f: "u",
+      h: "Route between Murtala Muhammed Airport and Victoria Island, Eko Bridge corridor, Lagos\u2013Ibadan Expressway",
+      m: "Travel in convoy, avoid stops, and share routes with your office or hotel. Arrange airport pickup exclusively through your hotel\u2019s transportation service or verified ride-hailing apps. The Lagos\u2013Ibadan Expressway has experienced security incidents; avoid highway travel after dark." },
+    { t: "ATM fraud and card manipulation schemes",
+      h: "ATMs in Murtala Muhammed International departures hall, Ikeja malls",
+      m: "Use machines inside banks; inspect card readers; cover your PIN." },
+    { t: "Online fraud and AI-powered scams targeting travellers", f: "u",
+      h: "Hotel Wi-Fi networks, social media platforms, WhatsApp and Telegram",
+      m: "Lagos is globally known for sophisticated online fraud. AI-driven phishing scams, fake investment opportunities, and romance fraud have increased sharply since 2025. Never respond to unsolicited online financial approaches; avoid street currency dealers who frequently short-change or use counterfeit notes; use ATMs at major banks (GTBank, First Bank, Access Bank) only." },
+    { t: "Civil unrest linked to economic protests or transport strikes",
+      h: "Ojota toll plaza, Ikeja administrative buildings, Lagos Island roundabouts",
+      m: "Monitor Punch or Premium Times news; avoid protest gatherings and reroute as needed. The U.S. has limited ability to provide emergency services outside Abuja and Lagos; register with the U.S. Embassy\u2019s STEP programme before arrival." }
+  ]},
+
+  // ── SENEGAL ───────────────────────────────────────────────────────────────
+  { name: "Dakar", code: "DSS", country: "Senegal", lat: 14.693, lng: -17.447, risks: [
+    { t: "Pickpocketing in tourist waterfront and market zones", f: "u",
+      h: "Sandaga Market, Place de l\u2019Ind\u00e9pendance, Corniche beaches, Corniche d\u2019Ouest",
+      m: "Keep valuables zipped, stay alert around vendors, and avoid flashing large electronics. Robberies along Corniche d\u2019Ouest are becoming more common and in some cases involve weapons; avoid walking alone on beaches and in tourist areas after dark. Hotels frequented by foreign nationals have been targeted and robbed at gunpoint since 2025." },
+    { t: "Taxi scams involving hidden fees or extra stops", f: "u",
+      h: "Blaise Diagne International Airport ranks, Plateau district streets",
+      m: "Agree on the fare before boarding and use official, metered taxis. Protesters have previously blocked the main road between Blaise Diagne International Airport and central Dakar \u2014 confirm road conditions before travel and allow extra time." },
+    { t: "ATM skimming and card theft near kiosks",
+      h: "ATMs near Sandaga Market and Grand Dakar convenience stores",
+      m: "Use bank-lobby machines; cover PIN and inspect devices. Dakar\u2019s ATMs can be unreliable with low withdrawal limits; carry backup cash or use Mobile Money services (Orange Money, Wave) as an alternative." },
+    { t: "Political demonstrations and youth unrest", f: "u",
+      h: "National Assembly area, Place du Souvenir, town squares, Universit\u00e9 Cheikh Anta Diop",
+      m: "Avoid protest routes; use alternative transport; follow local press updates. Demonstrations can turn violent and police have used force to disperse protests. Foreign nationals have been prosecuted for attending protests not approved by the government \u2014 do not participate even as a bystander." },
+    { t: "Armed robbery targeting beach areas and ferry users",
+      h: "\u00cele de Gor\u00e9e embarkation piers, Ngor Beach walkways",
+      m: "Travel in daylight only, keep group together, and minimise valuables in beach packs." }
+  ]},
+
+  // ── SOUTH AFRICA ──────────────────────────────────────────────────────────
+  { name: "Cape Town", code: "CPT", country: "South Africa", lat: -33.925, lng: 18.424, risks: [
+    { t: "Carjackings and smash-and-grab thefts in tourist districts", f: "u",
+      h: "Muizenberg, Table Mountain parking zone, Camps Bay viewpoints",
+      m: "Park in secured lots, avoid leaving bags visible, and remain alert at viewpoints. When travelling to or from Cape Town International Airport, stay on exit 16 (Airport Approach Road) on the N2 highway \u2014 do not take Borcherds Quarry Road, which leads to Nyanga township and carries elevated risk of attack. Carjackings are common at traffic lights, junctions, and driveways, particularly after dark." },
+    { t: "Taxi-related robberies and hijack attempts by unlicensed drivers", f: "u",
+      h: "Long Street, Greenmarket Square, informal minibus ranks",
+      m: "Use registered metered taxis or ride-share apps; avoid unmarked vehicles. Ongoing violence between taxi associations and ride-share drivers has resulted in passengers being mugged and assaulted near taxi stands \u2014 arrange ride-share pickups and drop-offs away from taxi ranks." },
+    { t: "ATM theft and fraud in isolated malls",
+      h: "ATMs in Canal Walk and suburban malls after hours",
+      m: "Use secure indoor ATM halls; shield PIN and inspect hardware." },
+    { t: "Pickpocketing in busier tourism corridors",
+      h: "V&amp;A Waterfront, Bo-Kaap area, car-free beachfront precincts",
+      m: "Keep bags firm, avoid selfie distractions near crowds." },
+    { t: "Civil protest blockades over local issues",
+      h: "Parliament precinct on Darling Street, Woodstock industrial zone",
+      m: "Check News24 or IOL for protests and reroute travel accordingly." }
+  ]},
+
+  { name: "Johannesburg", code: "JNB", country: "South Africa", lat: -26.205, lng: 28.050, risks: [
+    { t: "Carjackings and violent muggings", f: "u",
+      h: "Rosebank, Sandton CBD, Randburg highways, Alexandra, Ivory Park",
+      m: "Avoid visible cash displays; do not exit secure vehicles in isolated zones. SAPS Q3 2025/26 data shows Gauteng accounts for 55% of all carjackings nationally; Alexandra township recorded 76 carjackings in Q3 2025/26, more than double the prior year. Criminals have followed visitors from OR Tambo Airport to their hotel and robbed them at gunpoint \u2014 vary routes and watch for following vehicles." },
+    { t: "Express kidnappings via unscrupulous taxi or ride-share services", f: "u",
+      h: "OR Tambo Airport drop-offs, Park Station vicinities",
+      m: "Use reputable airport shuttles; verify driver details before entering. Avoid ride-share pickups near taxi stands due to ongoing violence between taxi associations and ride-share drivers. Never accept unsolicited offers of assistance or transport in the arrivals hall." },
+    { t: "Pickpocketing in crowded Maboneng or Market on Main events",
+      h: "Art walks, evening markets, transport hubs",
+      m: "Secure belongings, avoid tight pockets, and stay alert in dense crowds." },
+    { t: "ATM skimming at corner-store machines in suburban areas",
+      h: "ATMs in suburbs like Houghton, Braamfontein",
+      m: "Use bank interiors; avoid machines with visible wear; shield PIN pad." },
+    { t: "Township unrest and protests over service delivery",
+      h: "Johannesburg CBD fringe areas, Alexandra township roads",
+      m: "Avoid informal settlements unless with verified guides; follow news such as City Press or News24 alerts." }
+  ]},
+
+  // ── UAE ───────────────────────────────────────────────────────────────────
+  { name: "Dubai", code: "DXB", country: "United Arab Emirates", lat: 25.204, lng: 55.271, risks: [
+    { t: "Distraction thefts in busy shopping malls or metro lines",
+      h: "Dubai Mall, Gold Souk, Metro Red Line during peak hours",
+      m: "Keep wallets and phones close, avoid flashing valuables, and stay attentive during crowds." },
+    { t: "Overcharging by illegal or unlicensed taxi services",
+      h: "Dubai Airport arrival roads, Deira taxi ranks",
+      m: "Use RTA taxis or book via Careem/Uber; confirm meter is active before boarding." },
+    { t: "Cyber fraud, phishing, and Wi-Fi network attacks", f: "u",
+      h: "Hotel and caf\u00e9 public Wi-Fi networks, ATM kiosks, shopping mall payment terminals",
+      m: "The UAE Cybersecurity Council recorded 12,000+ Wi-Fi network breaches in 2025, representing 35% of all national cyber attacks. Use a reputable VPN on any public network; use ATMs inside bank lobbies only and inspect card slots for overlays. In July 2025, Dubai Courts upheld a conviction in a cyber fraud case involving AED 185 million \u2014 AI-driven phishing, deepfake communications, and fake investment platforms are now common threats targeting visitors." },
+    { t: "Harassment or detention under UAE public decency laws",
+      h: "Dress-code areas near religious sites or beach promenades",
+      m: "Respect local dress norms (cover shoulders and knees at religious sites and government buildings) and avoid public displays of affection. Public drunkenness and offensive language are prohibited and carry criminal penalties. Photography of government buildings, military sites, and strangers without consent is also prohibited." },
+    { t: "Regional airspace disruptions and flight cancellations", f: "n",
+      h: "Dubai International Airport (DXB), all terminals",
+      m: "Ongoing conflict in the wider Middle East region has caused periodic airspace closures and flight disruptions affecting Dubai. Check your airline\u2019s app and the Dubai Airports website for real-time flight status before travelling to the airport. Comprehensive travel insurance covering trip cancellation and interruption is strongly recommended for all travel to the region." }
+  ]}
+
+]; // end cities
+
+function buildPopup(city) {
+  var html = '<div class="pw">'
+    + '<p class="pc">' + city.name
+    + ' <span style="font-size:12px;font-weight:400;color:#888">(' + city.code + ')</span></p>'
+    + '<p class="pco">' + city.country + '</p>';
+
+  city.risks.forEach(function(r, i) {
+    var cls   = r.f === 'u' ? 'u' : r.f === 'n' ? 'n' : '';
+    var badge = r.f === 'u' ? '<span class="badge bu">updated</span>'
+              : r.f === 'n' ? '<span class="badge bn">new</span>' : '';
+    html += '<div class="pr">'
+      + '<div class="pn ' + cls + '">' + (i + 1) + '</div>'
+      + '<div class="pt">'
+      + '<div class="ptitle">' + r.t + badge + '</div>'
+      + '<div class="ph">' + r.h + '</div>'
+      + '<div class="pm">' + r.m + '</div>'
+      + '</div></div>';
+  });
+  return html + '</div>';
+}
+
+var map = L.map('map', { center: [15, 22], zoom: 3, minZoom: 2 });
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 18
+}).addTo(map);
+
+var pinIcon = L.divIcon({
+  className: '',
+  html: '<div style="width:13px;height:13px;border-radius:50%;background:#185FA5;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);"></div>',
+  iconSize: [13, 13],
+  iconAnchor: [6, 6]
+});
+
+cities.forEach(function(city) {
+  L.marker([city.lat, city.lng], { icon: pinIcon })
+    .addTo(map)
+    .bindPopup(buildPopup(city), { maxWidth: 360, minWidth: 320 });
+});
+
+var legend = L.control({ position: 'bottomright' });
+legend.onAdd = function() {
+  var div = L.DomUtil.create('div', 'legend');
+  div.innerHTML =
+    '<div class="legend-title">Risk legend</div>'
+    + '<div class="legend-row"><span class="legend-swatch" style="background:#E6F1FB;border:1px solid #B5D4F4"></span>Unchanged</div>'
+    + '<div class="legend-row"><span class="legend-swatch" style="background:#FAECE7;border:1px solid #F0997B"></span>&#9733; Updated</div>'
+    + '<div class="legend-row"><span class="legend-swatch" style="background:#EAF3DE;border:1px solid #97C459"></span>&#9733; New (2026)</div>'
+    + '<div class="legend-note">Click any pin to view risks</div>';
+  return div;
+};
+legend.addTo(map);
+</script>
+</body>
+</html>
