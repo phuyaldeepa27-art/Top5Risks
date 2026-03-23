@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LATAM &amp; Caribbean Destination Security Risks &mdash; Updated March 2026</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; }
+  header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0dc;
+    padding: 14px 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  header h1 { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  header span { font-size: 12px; color: #888; }
+  #map { width: 100%; height: calc(100vh - 49px); }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.14) !important;
+    padding: 0 !important;
+  }
+  .leaflet-popup-content { margin: 0 !important; }
+  .leaflet-popup-tip-container { margin-top: -1px; }
+
+  .pw {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    width: 340px;
+    max-height: 480px;
+    overflow-y: auto;
+    padding: 14px 16px;
+  }
+  .pw::-webkit-scrollbar { width: 4px; }
+  .pw::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+
+  .pc { font-size: 15px; font-weight: 600; color: #1a1a1a; margin: 0 0 2px; }
+  .pco { font-size: 12px; color: #888; margin: 0 0 10px; }
+
+  .pr {
+    display: flex;
+    gap: 9px;
+    padding: 8px 0;
+    border-top: 0.5px solid #e8e8e6;
+    align-items: flex-start;
+  }
+  .pn {
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: #185FA5;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .pn.u { background: #8B0000; }
+  .pn.n { background: #3B6D11; }
+
+  .pt { font-size: 12px; color: #1a1a1a; line-height: 1.45; }
+  .ptitle { font-weight: 600; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .bu { background: #FAECE7; color: #993C1D; }
+  .bn { background: #EAF3DE; color: #3B6D11; }
+  .ph { font-size: 11px; color: #666; margin-top: 3px; }
+  .pm { font-size: 11px; color: #666; margin-top: 3px; font-style: italic; line-height: 1.45; }
+
+  .legend {
+    background: #fff;
+    border: 0.5px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+  .legend-title { font-weight: 600; margin-bottom: 7px; color: #1a1a1a; }
+  .legend-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; color: #555; }
+  .legend-row:last-of-type { margin-bottom: 0; }
+  .legend-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; }
+  .legend-note {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 0.5px solid #e8e8e6;
+    color: #888;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>LATAM &amp; Caribbean Destination Security Risks</h1>
+  <span>Updated March 20, 2026 &mdash; United Airlines destinations &mdash; Click any pin to view risks</span>
+</header>
+
+<div id="map"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const cities = [
+
+  // ── THE BAHAMAS ────────────────────────────────────────────────────────────
+  { name:"Nassau", code:"NAS", country:"The Bahamas", lat:25.048, lng:-77.354, risks:[
+    { t:"Armed robberies and gang violence",
+      h:"Over-the-Hill neighbourhoods, Nassau Village, Bain Town",
+      m:"Remain within resort or cruise-approved zones, especially at night." },
+    { t:"Taxi fare scams",
+      h:"Lynden Pindling International Airport, Prince George Wharf",
+      m:"Confirm price before boarding and ask your hotel to arrange transport." },
+    { t:"Theft from tourists on beaches",
+      h:"Junkanoo Beach, Cabbage Beach",
+      m:"Don\u2019t leave items unattended, and travel in groups when possible." },
+    { t:"ATM skimming and fraud",
+      h:"ATM machines outside convenience stores and at Bay Street",
+      m:"Use bank-based ATMs and avoid using cards at unattended gas pumps." },
+    { t:"Political protests and strikes",
+      h:"Rawson Square and around Parliament buildings",
+      m:"Avoid public demonstrations and monitor The Nassau Guardian for traffic alerts." }
+  ]},
+
+  // ── BELIZE ─────────────────────────────────────────────────────────────────
+  { name:"Belize City", code:"BZE", country:"Belize", lat:17.252, lng:-88.767, risks:[
+    { t:"Violent street crime, including armed robberies",
+      h:"Southside Belize City (George Street, Kraal Road, Lake Independence)",
+      m:"Avoid walking in Southside neighbourhoods, especially after dark. Use registered taxis and remain in secure areas like the Fort George tourism zone." },
+    { t:"ATM and credit card fraud",
+      h:"Albert Street, near Brodies Supermarket, and stand-alone ATMs across the city",
+      m:"Use bank ATMs during the day, inspect machines for tampering, and notify your bank of travel dates." },
+    { t:"Pickpocketing and bag-snatching targeting tourists",
+      h:"Swing Bridge area, Water Taxi terminals, and Battlefield Park",
+      m:"Carry minimal cash, use crossbody bags, and remain alert in crowded areas." },
+    { t:"Carjacking and road assaults",
+      h:"Central American Boulevard and roads connecting to Western Highway",
+      m:"Drive with doors locked, avoid isolated areas at night, and be cautious at red lights." },
+    { t:"Gang-related violence and crossfire risk",
+      h:"Jane Usher Boulevard, Mayflower Street",
+      m:"Do not enter gang-dominated neighbourhoods. Stay within known tourist and commercial zones." }
+  ]},
+
+  // ── BERMUDA ────────────────────────────────────────────────────────────────
+  { name:"Hamilton", code:"BM", country:"Bermuda", lat:32.294, lng:-64.782, risks:[
+    { t:"Petty theft from tourists and hotel guests",
+      h:"Hamilton ferry terminal, Front Street shopping district",
+      m:"Lock hotel doors, store valuables in safes, and remain aware of surroundings in tourist areas." },
+    { t:"Scooter accidents and thefts",
+      h:"Coastal roads between Hamilton and Dockyard",
+      m:"Wear a helmet, drive defensively, and park in secure lots with a lock." },
+    { t:"Credit card fraud at small vendors",
+      h:"Street markets and independent gift shops in Hamilton",
+      m:"Use credit cards with chip security and monitor statements for unauthorised transactions." },
+    { t:"Aggressive panhandling",
+      h:"Church Street and Queen Street pedestrian zones",
+      m:"Politely decline interactions and walk with confidence; avoid displaying cash." },
+    { t:"Isolated protests near government buildings",
+      h:"Parliament Street and City Hall",
+      m:"Monitor local news (The Royal Gazette) and avoid the area during planned gatherings." }
+  ]},
+
+  // ── COSTA RICA ─────────────────────────────────────────────────────────────
+  { name:"Liberia", code:"LIR", country:"Costa Rica", lat:10.634, lng:-85.442, risks:[
+    { t:"Theft from rental cars and parked vehicles",
+      h:"Beaches near Playa Hermosa, parking lots at Rinc\u00f3n de la Vieja",
+      m:"Do not leave belongings in cars. Park in secure, attended lots." },
+    { t:"Armed robberies in rural areas at night",
+      h:"Roads between Tamarindo and Liberia",
+      m:"Avoid driving after dark and use well-lit highways." },
+    { t:"ATM skimming and electronic fraud",
+      h:"ATMs near downtown Liberia and airport terminals",
+      m:"Use ATMs inside major banks and avoid night withdrawals." },
+    { t:"Taxi overcharging and fare manipulation",
+      h:"Daniel Oduber Quir\u00f3s International Airport",
+      m:"Use orange airport taxis or ride-hailing apps like Uber where available." },
+    { t:"Roadblocks during labour or political protests",
+      h:"Pan-American Highway entrances",
+      m:"Monitor La Naci\u00f3n or local updates. Use alternative routes when protests are expected." }
+  ]},
+
+  { name:"San Jos\u00e9", code:"SJO", country:"Costa Rica", lat:9.934, lng:-84.087, risks:[
+    { t:"Pickpocketing in busy pedestrian zones", f:"u",
+      h:"Avenida Central, Coca-Cola bus terminal",
+      m:"Carry minimal cash, avoid backpacks, and stay alert in crowded areas. Phone-snatch theft has increased since 2025 \u2014 keep devices stowed when not in use and away from caf\u00e9 table edges." },
+    { t:"Armed robbery in hotel zones and after dark",
+      h:"Paseo Col\u00f3n, Sabana Park perimeter",
+      m:"Avoid walking alone at night and use trusted transport options." },
+    { t:"ATM skimming and card theft",
+      h:"Convenience stores and small malls in Escaz\u00fa",
+      m:"Use ATMs located in bank branches and inspect for suspicious devices." },
+    { t:"Taxi scams involving fake meters",
+      h:"Juan Santamar\u00eda International Airport, city taxi ranks",
+      m:"Use only red taxis with a yellow triangle or pre-booked services. Ask that meters be used." },
+    { t:"Protests and strikes disrupting transit",
+      h:"Legislative Assembly building, La Sabana area",
+      m:"Follow local news reports and avoid protest zones even if peaceful." }
+  ]},
+
+  // ── EL SALVADOR ────────────────────────────────────────────────────────────
+  { name:"San Salvador", code:"SAL", country:"El Salvador", lat:13.697, lng:-89.191, risks:[
+    { t:"Gang-related violence and armed robbery", f:"u",
+      h:"Soyapango, Ilopango, and Apopa",
+      m:"Avoid non-tourist residential zones, especially after dusk. Stick to hotel-secured routes and zones like Zona Rosa. The country maintains a U.S. Level 3 (Reconsider Travel) advisory despite significant homicide reductions under the State of Exception; gang infrastructure remains intact even where overt violence has declined." },
+    { t:"Fake taxi kidnappings and overcharging",
+      h:"El Salvador International Airport, downtown terminals",
+      m:"Use hotel-arranged rides or official apps like InDrive. Avoid flagging taxis off the street." },
+    { t:"Pickpocketing in crowded marketplaces",
+      h:"Mercado Central, Plaza Libertad",
+      m:"Keep valuables close, wear bags across your chest, and avoid busy market zones alone." },
+    { t:"State of exception and arbitrary detentions", f:"u",
+      h:"Nationwide, with military checkpoints in eastern neighbourhoods",
+      m:"Carry identification at all times. The State of Exception \u2014 granting security forces broad arrest powers \u2014 has been continuously renewed since March 2022 and remains in effect as of March 2026; foreign nationals have been detained at checkpoints even when not suspected of gang affiliation." },
+    { t:"ATM fraud and card skimming",
+      h:"Convenience stores and isolated bank vestibules",
+      m:"Use indoor ATMs during business hours and monitor your account closely." }
+  ]},
+
+  // ── GUATEMALA ──────────────────────────────────────────────────────────────
+  { name:"Guatemala City", code:"GUA", country:"Guatemala", lat:14.641, lng:-90.513, risks:[
+    { t:"Armed robberies and violent muggings",
+      h:"Zone 3, Zone 18, and outer edges of Zone 1",
+      m:"Avoid walking alone, especially after dark. Use hotel transportation or trusted taxi services like Uber." },
+    { t:"Theft at ATMs and during banking transactions",
+      h:"Zone 10 (Zona Viva) near bars, ATMs in Zone 1 commercial centres",
+      m:"Withdraw money during daylight at secure bank branches; avoid loitering after transactions." },
+    { t:"Political demonstrations with police response", f:"u",
+      h:"Plaza de la Constituci\u00f3n, Avenida Reforma",
+      m:"Monitor Prensa Libre and social media. Avoid protest zones and anticipate road closures. Guatemala maintains a Level 3 U.S. advisory; anti-government protests have intensified amid ongoing institutional tensions in 2025\u20132026." },
+    { t:"Fake police checkpoints and extortion",
+      h:"Roadways leading into Zone 6 and northern approaches to the city",
+      m:"Ask for official identification. If uncertain, contact the embassy or tourist police." },
+    { t:"Express kidnappings involving unlicensed taxis",
+      h:"La Aurora International Airport, Zone 4",
+      m:"Book rides through hotels or apps; do not accept unsolicited transportation offers." }
+  ]},
+
+  // ── HONDURAS ───────────────────────────────────────────────────────────────
+  { name:"San Pedro Sula", code:"SAP", country:"Honduras", lat:15.504, lng:-88.026, risks:[
+    { t:"Violent assaults and homicides",
+      h:"Rivera Hern\u00e1ndez, Chamelec\u00f3n, and La Uni\u00f3n neighbourhoods",
+      m:"Avoid these areas altogether. Limit movement to secured hotel areas or guided travel." },
+    { t:"Taxi extortion and fake ride scams",
+      h:"Ram\u00f3n Villeda Morales Airport, Boulevard del Norte",
+      m:"Use hotel-provided or app-based taxis. Confirm licence plate before boarding." },
+    { t:"Petty theft and bag-snatching",
+      h:"Central Market, Parque Central",
+      m:"Travel light, stay aware of surroundings, and avoid showing electronics." },
+    { t:"Civil unrest and spontaneous protests",
+      h:"City Hall Plaza, Industrial Zone highway arteries",
+      m:"Monitor local radio for traffic disruptions. Stay inside if demonstrations are reported." },
+    { t:"ATM fraud and card skimming",
+      h:"Strip mall ATMs and near bus terminals",
+      m:"Stick to ATMs inside banks and check for unusual hardware." }
+  ]},
+
+  { name:"Tegucigalpa", code:"XPL", country:"Honduras", lat:14.082, lng:-87.206, risks:[
+    { t:"Street violence and targeted robbery",
+      h:"Colonia Kennedy, El Pedregal, and downtown neighbourhoods after dark",
+      m:"Remain in high-security areas and avoid walking outside your hotel zone." },
+    { t:"Pickpocketing in transit areas",
+      h:"Parque Central, intercity bus terminals",
+      m:"Wear bags with zippers and avoid showing electronics or cash publicly." },
+    { t:"Protests near government buildings",
+      h:"Congreso Nacional, Central Park",
+      m:"Monitor national news (La Tribuna) and avoid political gatherings." },
+    { t:"ATM tampering and shoulder surfing",
+      h:"Standalone machines in Zona Centro",
+      m:"Prefer ATMs in upscale malls or banks and shield your PIN." },
+    { t:"Taxi scams and overcharging",
+      h:"Tonconт\u00edn International Airport, Calle Real hotel district",
+      m:"Confirm fare before boarding and use authorised providers." }
+  ]},
+
+  { name:"Roat\u00e1n", code:"RTB", country:"Honduras", lat:16.319, lng:-86.535, risks:[
+    { t:"Opportunistic theft from tourists",
+      h:"West End beaches, Coxen Hole ferry dock",
+      m:"Keep belongings in sight and use waterproof bags when snorkelling or diving." },
+    { t:"Credit card cloning at beach vendors",
+      h:"West Bay Beach souvenir shops",
+      m:"Pay with cash when possible and avoid giving your card to staff out of sight." },
+    { t:"Isolated muggings on hiking trails",
+      h:"Carambola Botanical Gardens, jungle paths outside of tourist areas",
+      m:"Don\u2019t hike alone and inform your hotel of your route and return time." },
+    { t:"Local demonstrations disrupting roads",
+      h:"Main road between French Harbour and Coxen Hole",
+      m:"Use alternative routes and listen to radio updates for closures." },
+    { t:"Price gouging from informal taxi drivers",
+      h:"Cruise ship port arrivals, beachfront zones",
+      m:"Agree on prices in advance or use hotels to book transport." }
+  ]},
+
+  // ── NICARAGUA ──────────────────────────────────────────────────────────────
+  { name:"Managua", code:"MGA", country:"Nicaragua", lat:12.136, lng:-86.292, risks:[
+    { t:"Armed robberies and carjackings",
+      h:"Around the National University, El Mercado Oriental",
+      m:"Avoid travelling alone after dark. Use trusted drivers and avoid poorly lit or empty streets." },
+    { t:"Government crackdowns and political repression", f:"u",
+      h:"Metrocentro roundabout, Plaza Las Victorias",
+      m:"Refrain from political discussions in public. Stay away from gatherings near government offices or university campuses. The Ortega government\u2019s crackdown on civil society has expanded; arbitrary detentions of foreigners perceived as politically sympathetic have been reported since 2025 \u2014 avoid photographing government buildings or security forces." },
+    { t:"Pickpocketing and bag-snatching",
+      h:"Bus terminals (UCA Terminal), Mercado Roberto Huembes",
+      m:"Use bags with locks or zippers. Avoid travelling during rush hours or crowd congestion." },
+    { t:"Fake taxis and price gouging",
+      h:"Augusto C. Sandino International Airport, shopping malls",
+      m:"Only use registered taxis arranged by your hotel or trusted app-based services." },
+    { t:"ATM fraud and card cloning",
+      h:"Gas stations and freestanding ATMs",
+      m:"Stick to ATMs inside banks or large supermarkets. Shield your PIN and inspect for skimming devices." }
+  ]},
+
+  // ── PANAMA ─────────────────────────────────────────────────────────────────
+  { name:"Panama City", code:"PTY", country:"Panama", lat:8.994, lng:-79.519, risks:[
+    { t:"Pickpocketing and bag theft",
+      h:"Albrook Mall, Avenida Central, Casco Viejo",
+      m:"Stay alert in crowded shopping or historic districts. Keep valuables hidden and secured." },
+    { t:"Violent crime in certain neighbourhoods",
+      h:"El Chorrillo, Curu\u00f1d\u00fa, and parts of San Miguelito",
+      m:"Avoid high-crime districts. Stick to business, banking, or hotel areas." },
+    { t:"Taxi overcharging and route manipulation",
+      h:"Tocumen International Airport, Cinta Costera",
+      m:"Use airport-regulated taxis or apps like Uber and DiDi. Confirm destination and price before boarding." },
+    { t:"ATM skimming and data theft",
+      h:"24-hour ATMs in Bella Vista, V\u00eda Espa\u00f1a",
+      m:"Use machines inside banks, hotels, or major shopping centres. Cover the keypad and check for attachments." },
+    { t:"Demonstrations disrupting downtown transit", f:"u",
+      h:"Avenida Balboa, Plaza 5 de Mayo",
+      m:"Check La Prensa or TVN Noticias for updates. Avoid downtown roadways during protests. Protest activity tied to U.S.\u2013Panama Canal tensions has increased since late 2025; demonstrations near Canal Zone administration areas can affect transit routes." }
+  ]},
+
+  // ── MEXICO ─────────────────────────────────────────────────────────────────
+  { name:"Acapulco", code:"ACA", country:"Mexico", lat:16.853, lng:-99.823, risks:[
+    { t:"High-profile cartel violence and shootings", f:"u",
+      h:"Zona Dorada, Playa Caleta, traditional downtown areas",
+      m:"Guerrero state was named in the U.S. shelter-in-place order issued during the CJNG retaliatory violence of 22 February 2026, following the killing of cartel leader El Mencho. CJNG succession battles in Guerrero will remain active for months. Stay in well-travelled areas and coordinate travel via trusted local contacts or hotels." },
+    { t:"Corruption and distrust of local police",
+      h:"Entire city centre; police headquarters vicinity",
+      m:"Be cautious during interactions; verify authority. Rely on private security provided by reputable hotels." },
+    { t:"Extortion and kidnapping at fake checkpoints",
+      h:"Highway 200 corridor between Acapulco and Zihuatanejo",
+      m:"Travel with military-escorted buses or chartered transfers; do not stop at unofficial checkpoints." },
+    { t:"Theft and armed robbery in vacation rental zones",
+      h:"Caletilla Beach, Diamante area residential streets",
+      m:"Use secured, gated accommodations; avoid walking alone at night. Report suspicious activity promptly." },
+    { t:"Looting and opportunistic crime in partially recovered areas",
+      h:"Recovered infrastructure and partially cleared zones around downtown",
+      m:"Maintain heightened vigilance; follow hotel guidance; avoid nighttime excursions off-resort." }
+  ]},
+
+  { name:"Canc\u00fan", code:"CUN", country:"Mexico", lat:21.161, lng:-86.852, risks:[
+    { t:"Cartel gunfire spilling into resort areas", f:"u",
+      h:"Hotel Zone beaches, Canc\u00fan marina",
+      m:"During the 22 February 2026 CJNG crisis, Quintana Roo returned to normal quickly; the state governor deployed 10,000+ security personnel and the area remained at U.S. State Dept Level 2 throughout. Ongoing CJNG succession battles may produce occasional incidents despite heavy security investment. Remain in secured premises and follow hotel alerts." },
+    { t:"Taxi driver aggression toward ride-share users",
+      h:"Puerto Morelos vicinity, airport taxi ranks",
+      m:"Use only official airport or hotel-accepted transfers. Register any incidents with police or embassy." },
+    { t:"Petty theft and pickpocketing downtown",
+      h:"Downtown centro, markets around Avenida Tulum",
+      m:"Stay within the Hotel Zone when possible; keep valuables in zipped pouches." },
+    { t:"ATM fraud and skimming at freestanding machines",
+      h:"Non-bank ATMs on Avenida Kukul\u00e1n outskirts",
+      m:"Use ATM lanes inside banks or hotel lobbies; inspect devices before using." },
+    { t:"Timeshare scams and aggressive solicitation", f:"n",
+      h:"Hotel Zone shopping centres, airport arrival areas, beach club entrances",
+      m:"Decline all unsolicited \u2018free tour\u2019 or \u2018welcome gift\u2019 offers; these are entry points to high-pressure timeshare presentations that can result in significant financial loss. Never hand over your credit card or passport to secure a \u2018free gift.\u2019 Complaints to tourism authorities have surged since 2025 with increasingly aggressive tactics targeting arriving passengers." }
+  ]},
+
+  { name:"Cozumel", code:"CZM", country:"Mexico", lat:20.507, lng:-86.946, risks:[
+    { t:"Credit card fraud at beach clubs and souvenir shops",
+      h:"San Miguel waterfront shops, Playa Palancar area",
+      m:"Use cash when possible, double-check receipts, and monitor bank activity after purchase." },
+    { t:"Bag theft and unattended belongings on public beaches",
+      h:"Playa San Juan, Playa M\u00eda Grand Beach Park",
+      m:"Don\u2019t leave personal items unattended; use beach lockers or have someone stay with valuables." },
+    { t:"Inflated fares and cash-only scams by taxi drivers",
+      h:"Cozumel ferry terminal and cruise ship port",
+      m:"Confirm price before entering, use posted fare charts, and carry small change to avoid disputes." },
+    { t:"Break-ins and thefts in vacation rentals",
+      h:"Private villas in southern hotel zone",
+      m:"Choose reputable, well-reviewed rentals; ensure properties have secure locks, safes, and local contacts." },
+    { t:"Aggressive tour solicitation and bait-and-switch scams",
+      h:"Outside cruise terminals, Parque Benito Ju\u00e1rez",
+      m:"Book activities through licensed providers or your hotel; decline unsolicited offers on the street." }
+  ]},
+
+  { name:"Guadalajara", code:"GDL", country:"Mexico", lat:20.659, lng:-103.349, risks:[
+    { t:"CJNG retaliatory violence and successor faction clashes", f:"u",
+      h:"Downtown Guadalajara, Chapalita, Zapopan outskirts",
+      m:"On 22 February 2026, CJNG launched retaliatory attacks after El Mencho\u2019s killing: the airport was shut down, roadblocks were set ablaze across 20+ locations in the metro area, and U.S. and Canadian citizens were advised to shelter in place. The Code Red was lifted by 25 February. Guadalajara hosts 2026 FIFA World Cup matches in June; a large security deployment is expected but cannot guarantee safety in peripheral areas." },
+    { t:"Express kidnappings via fake taxi services", f:"u",
+      h:"Miguel Hidalgo Airport pickups, Chapultepec Avenue",
+      m:"Only use officially licensed taxis or ride-share apps; verify driver identity before boarding. During the 22 February crisis, criminals impersonated Uber drivers \u2014 always match the plate number and driver photo in-app before entering the vehicle." },
+    { t:"Bag-snatching by motorbike riders",
+      h:"Avenida Vallarta, Plaza del Sol shopping corridor",
+      m:"Keep bags across your body and closer to the inner side when stopped at traffic lights." },
+    { t:"ATM and point-of-sale fraud",
+      h:"ATMs in Guadalajara Centro and market stalls in San Juan de Dios",
+      m:"Use machines inside banks; avoid giving your card to vendors; monitor statements." },
+    { t:"Targeted shootings near official buildings", f:"u",
+      h:"Federal and state government buildings, major metro area intersections",
+      m:"Avoid these areas if tensions rise; follow U.S. Embassy Mexico security alerts at mx.usembassy.gov/security-alerts/. Monitor CJNG succession developments closely through 2026 as splinter factions compete for territorial control." }
+  ]},
+
+  { name:"Le\u00f3n / Guanajuato", code:"BJX", country:"Mexico", lat:20.993, lng:-101.844, risks:[
+    { t:"Mass shootings tied to cartel violence", f:"u",
+      h:"Celaya highway festival zones, Irapuato corridors",
+      m:"Guanajuato was among the states experiencing retaliatory roadblocks on 22 February 2026. The state is a battleground between CJNG and Sinaloa-aligned groups; succession battles will intensify competition for Guanajuato territory. Avoid public gatherings; stay in central tourist zones only." },
+    { t:"Shoot-outs near gas stations during fuel theft raids",
+      h:"Major highways north of Le\u00f3n city",
+      m:"Do not stop near rural gas stations at night; use toll-road exits with security." },
+    { t:"Local kidnap rings targeting isolated commuters",
+      h:"Outskirts of Le\u00f3n and Guanajuato high-traffic roads",
+      m:"Travel in convoy; share itineraries; prefer daytime travel." },
+    { t:"Unlicensed minibus (\u2018pesero\u2019) theft or robbery",
+      h:"Le\u00f3n bus terminals and mercado entry points",
+      m:"Use registered services or ride-hailing apps; avoid minibuses after dark." },
+    { t:"Card cloning at local ATMs or small stores",
+      h:"Le\u00f3n airport and downtown plazas",
+      m:"Use ATMs inside major banks; avoid street-side card transactions." }
+  ]},
+
+  { name:"Ixtapa / Zihuatanejo", code:"ZIH", country:"Mexico", lat:17.644, lng:-101.556, risks:[
+    { t:"Occasional cartel violence spilling into beach fronts", f:"u",
+      h:"Zihuatanejo beachfront markets and Ixtapa marina breakwater",
+      m:"Highway 200 between Acapulco and Zihuatanejo experienced CJNG roadblocks on 22 February 2026; overland travel on this route carries elevated risk during periods of cartel instability. Stay in secured resort areas; avoid local nightlife after dark." },
+    { t:"Boat and gear theft in marina zones",
+      h:"Playa La Ropa docks and fishing piers",
+      m:"Use secure storage; lock dive and snorkel equipment; avoid leaving gear unattended." },
+    { t:"Overcharging taxi scams targeting ferry riders",
+      h:"Ixtapa island ferry docks",
+      m:"Use official taxis or hotel-arranged transfers; agree fare in advance." },
+    { t:"Fraudulent tour operators selling nonexistent packages",
+      h:"Beachfront souvenir stalls and hotel pushers",
+      m:"Book through official agencies; verify prepayment policies; get receipts." },
+    { t:"Local protests over fishing or environmental regulation",
+      h:"Zihuatanejo municipal docks and fishermen\u2019s cooperative",
+      m:"Avoid areas during strike periods; ask hotel staff about scheduled closures." }
+  ]},
+
+  { name:"Manzanillo", code:"ZLO", country:"Mexico", lat:19.117, lng:-104.338, risks:[
+    { t:"Drug-tied violence near shipping ports", f:"u",
+      h:"Manzanillo port and tank farm roadways",
+      m:"Colima state saw CJNG retaliatory roadblocks on 22 February 2026; the state is among the most cartel-contested in Mexico and violence linked to succession battles is likely to continue through 2026. Stay away from dock areas; focus visits on resort beaches and hotel zones." },
+    { t:"Highway robberies along Pacific coastal roads",
+      h:"Highway between Manzanillo and Colima (coastal route)",
+      m:"Avoid night travel; keep doors locked and windows up." },
+    { t:"Petty theft from vehicles in beachside lots",
+      h:"Las Hadas and Miramar Beach parking zones",
+      m:"Remove valuables; use hotel parking; avoid isolated lots." },
+    { t:"ATM fraud at standalone kiosks near downtown",
+      h:"ATMs near Benito Ju\u00e1rez main streets",
+      m:"Use bank-lobby ATMs; conceal PIN entry and inspect machines." },
+    { t:"Local labour strikes affecting port workers",
+      h:"Port access roads and La Audiencia ferry terminal",
+      m:"Avoid port areas during strike periods; monitor local news." }
+  ]},
+
+  { name:"Mazatl\u00e1n", code:"MZT", country:"Mexico", lat:23.249, lng:-106.411, risks:[
+    { t:"Occasional cartel shootouts spilling into tourist zones", f:"u",
+      h:"Zona Tranquila, Olas Altas during high season",
+      m:"Sinaloa state was named in the CJNG retaliatory violence of 22 February 2026; the situation stabilised quickly in Mazatl\u00e1n but ongoing CJNG\u2013Sinaloa cartel turf competition creates background risk. Stay in well-lit areas; avoid beach bars after midnight in off-resort zones. Monitor U.S. Embassy Mexico travel alerts." },
+    { t:"Pickpocketing in crowded mercados and Malec\u00f3n",
+      h:"Mercado Pino Su\u00e1rez, Malec\u00f3n boardwalk crowd clusters",
+      m:"Use secure bags, avoid carrying valuables openly." },
+    { t:"Water taxi and beach cart scams near Isla de la Piedra",
+      h:"Paddleboat operators and unofficial beach services",
+      m:"Use only licensed boats; confirm price in advance; don\u2019t pay the full amount upfront." },
+    { t:"ATM skimming at convenience stores near central plazas",
+      h:"ATMs near Plaza Machado and convenience stores in Zona Centro",
+      m:"Use ATMs inside banks or cruise terminal halls; inspect card slot for skimmers." },
+    { t:"Local protests over fishing or tourism policy issues",
+      h:"City Hall Plaza and main ferry dock",
+      m:"Avoid downtown civic areas during protests; check media outlets before touring." }
+  ]},
+
+  { name:"M\u00e9rida", code:"MID", country:"Mexico", lat:20.967, lng:-89.623, risks:[
+    { t:"Rising pickpocketing in markets",
+      h:"Mercado Lucas de G\u00e1lvez, Paseo de Montejo Sunday parades",
+      m:"Stay alert in crowded stalls; carry minimal items; avoid rearranging souvenirs." },
+    { t:"Taxi scams and overcharging in airport transfers",
+      h:"Manuel Crescencio Rej\u00f3n International Airport stands",
+      m:"Use \u2018sitio\u2019 taxis or pre-book through hotel; confirm fixed rate before entry." },
+    { t:"Credit card fraud at artisanal stalls",
+      h:"Plaza Grande artisan kiosks",
+      m:"Use cash for small purchases; never let card out of sight; check your statement." },
+    { t:"Tourist-targeted robberies during nighttime walks",
+      h:"Parque de las Am\u00e9ricas and evening Candil zone",
+      m:"Avoid walking alone after dark; use registered ride-share services." },
+    { t:"Heritage-site access disruptions or protests",
+      h:"Access routes to Uxmal and Chich\u00e9n Itz\u00e1 when via Campeche protests",
+      m:"Confirm tour routes; avoid roadblocks; tour with licensed operators." }
+  ]},
+
+  { name:"Mexico City", code:"MEX", country:"Mexico", lat:19.433, lng:-99.133, risks:[
+    { t:"Cartel-linked violence in government districts", f:"u",
+      h:"Near government offices and training centres in Tlalpan and Xochimilco",
+      m:"On 22 February 2026, CJNG roadblocks appeared in Estado de M\u00e9xico, adjacent to Mexico City. Ongoing succession battles could affect peripheral districts. Stay within tourist areas like Polanco and Condesa; monitor U.S. Embassy security alerts." },
+    { t:"Street robberies on public transit (Metro and Metrobus)",
+      h:"Line 1 platforms (Observatorio, Pantitl\u00e1n), Z\u00f3calo stations",
+      m:"Keep belongings close, avoid peak hours; use secure city transport passes." },
+    { t:"Fake ride-share setups or unlicensed taxis",
+      h:"Benito Ju\u00e1rez Airport exits, downtown hotel drop-offs",
+      m:"Use licensed airport taxis or official app drivers; verify plate numbers. Mexican customs has sharply increased enforcement targeting travellers with multiple electronic devices since late 2025; declare all equipment on arrival forms." },
+    { t:"Card cloning and fraud in small eateries",
+      h:"Caf\u00e9s in Roma, Ju\u00e1rez, and Santo Domingo souk areas",
+      m:"Prefer cash or chip/tap; watch card transactions; monitor statements closely." },
+    { t:"Political protests disrupting traffic and metro access",
+      h:"Plaza de la Constituci\u00f3n, Paseo de la Reforma",
+      m:"Follow traffic advisories; avoid crowd zones; reroute using official announcements." }
+  ]},
+
+  { name:"Monterrey", code:"MTY", country:"Mexico", lat:25.686, lng:-100.316, risks:[
+    { t:"Gang-related shootings in peripheral neighbourhoods", f:"u",
+      h:"Apodaca outskirts, industrial zones near Guadalupe",
+      m:"Nuevo Le\u00f3n was named in the U.S. shelter-in-place advisory of 22 February 2026 following El Mencho\u2019s killing; the situation stabilised quickly but illustrates CJNG\u2019s reach to major business hubs. Avoid venturing outside secured business districts; use hotel or official transport only." },
+    { t:"Armed carjacking along major thoroughfares",
+      h:"Carretera Nacional and Monterrey\u2013Saltillo highway segments",
+      m:"Do not stop for strangers; lock doors; travel in daylight if possible." },
+    { t:"ATM fraud at convenience stores",
+      h:"Standalone ATMs in local markets",
+      m:"Use bank ATMs or withdraw inside malls; inspect devices." },
+    { t:"Fake ride-share schemes targeting business travellers",
+      h:"General Mariano Escobedo International Airport and shopping zone ranks",
+      m:"Use recognised ride apps; verify vehicle information before boarding." },
+    { t:"Protests over industrial labour action",
+      h:"San Pedro Garza Garc\u00eda city gates and Reforma Avenue",
+      m:"Monitor CENACE or local news; avoid main roads during union activity." }
+  ]},
+
+  { name:"Morelia", code:"MLM", country:"Mexico", lat:19.706, lng:-101.195, risks:[
+    { t:"Cartel violence at public gatherings and on state highways", f:"u",
+      h:"Plaza Melchor Ocampo during Independence Day celebrations, Michoac\u00e1n state highways",
+      m:"Michoac\u00e1n was specifically named in the U.S. shelter-in-place order of 22 February 2026; the state saw 30+ criminal suspects killed and National Guard attacks during CJNG retaliatory violence. President Sheinbaum has deployed additional federal forces. Remain vigilant through 2026." },
+    { t:"Armed thefts near bus terminals and markets",
+      h:"Morelia Central Bus Station and Mercado de Dulces",
+      m:"Use registered taxis or hotel transport; avoid carrying valuables openly in crowded areas." },
+    { t:"ATM skimming in isolated kiosks",
+      h:"Downtown ATMs near Calzada Fray Antonio de San Miguel",
+      m:"Use ATMs inside banks, check for tampering, and shield PIN entry." },
+    { t:"Taxi extortion by unregulated drivers",
+      h:"Airport and bus station stands",
+      m:"Use hotel-recommended taxi services or buy official tickets at taxi desks." },
+    { t:"Local protests over governance or fuel shortages",
+      h:"Government Palace area and roadways leading to Celaya",
+      m:"Avoid public squares; monitor local news; reroute around protest zones." }
+  ]},
+
+  { name:"Oaxaca", code:"OAX", country:"Mexico", lat:17.073, lng:-96.727, risks:[
+    { t:"Express kidnappings on coastal roads",
+      h:"Highway rounds near Puerto Escondido, San Jos\u00e9 Miahuatl\u00e1n region",
+      m:"Use reputable drivers, avoid solo travel at night, and share your itinerary." },
+    { t:"Informal tour scams selling fake Oaxacan experiences",
+      h:"Artisan markets in Oaxaca City historic centre",
+      m:"Book through licensed agencies and verify credentials before payment." },
+    { t:"Card fraud in small eateries or craft stalls",
+      h:"Centro Hist\u00f3rico and Mercado Benito Ju\u00e1rez",
+      m:"Use cash for small purchases; avoid letting vendors swipe cards unsupervised." },
+    { t:"Bag-snatching in crowded Z\u00f3calo events",
+      h:"Sunday dances, festivals in Plaza de la Constituci\u00f3n",
+      m:"Use anti-theft bags, stay vigilant in crowds, and avoid phone distractions." },
+    { t:"Community roadblocks or highway protests over land rights",
+      h:"Access routes to Monte Alb\u00e1n and mezcal distilleries around Tlacolula",
+      m:"Confirm road access prior to departure; anticipate detours; respect closures." }
+  ]},
+
+  { name:"Puebla", code:"PBC", country:"Mexico", lat:19.043, lng:-98.198, risks:[
+    { t:"Violent disputes over pipeline theft", f:"u",
+      h:"Rural highways south of Puebla City near pipeline lines",
+      m:"Puebla toll roads were among those temporarily blocked during CJNG-linked activity on 22 February 2026. Avoid road travel outside urban centres, especially at dawn or dusk." },
+    { t:"Express kidnappings and violent attacks on visitor groups",
+      h:"Highway areas near San Jos\u00e9 Miahuatl\u00e1n and north coast exit roads",
+      m:"Do not stop unexpectedly; use trusted transport; travel in groups." },
+    { t:"Muggings and pickpocketing in transit hubs and markets",
+      h:"Mercado Amalucan, bus terminals, Centro Hist\u00f3rico",
+      m:"Stay aware, lock belongings, and avoid solo shopping in busy market areas." },
+    { t:"ATM and POS fraud at small outlet machines",
+      h:"Independent ATMs near Plaza de la Victoria",
+      m:"Use ATM lanes inside banks; cover keypad and check statements." },
+    { t:"Mass protests around civic infrastructure",
+      h:"Government Palace plaza, Avenida Reforma in city centre",
+      m:"Stay away from official buildings during strikes; follow trusted media bulletins." }
+  ]},
+
+  { name:"Puerto Escondido", code:"PXM", country:"Mexico", lat:15.863, lng:-97.073, risks:[
+    { t:"Highway abductions and express kidnappings",
+      h:"Coastal route between Oaxaca City and Puerto Escondido",
+      m:"Avoid driving alone at night; travel via tourist shuttle or charter; share plans with contacts." },
+    { t:"Theft from unattended equipment during beach tours",
+      h:"Zicatela Beach vendor areas and fishing ramps",
+      m:"Keep items secured; stay within populated zones; lock gear when not in immediate use." },
+    { t:"Misleading scuba or surfing tour operators charging hidden fees",
+      h:"Tours organised near Zicatela and Carrizalillo",
+      m:"Verify certifications, ask for receipts, and confirm tour details in writing before prepayment." },
+    { t:"Fraud at small restaurants or beach bars using portable card readers",
+      h:"Shoreline food stalls and beach caf\u00e9s",
+      m:"Use cash or pay at bank terminals; watch for suspicious handheld devices." },
+    { t:"Local protests over coastal development",
+      h:"Marina entrance and tourist trade paths to La Barra",
+      m:"Avoid gathering areas; check for permit-related closures; respect signage." }
+  ]},
+
+  { name:"Puerto Vallarta", code:"PVR", country:"Mexico", lat:20.653, lng:-105.225, risks:[
+    { t:"CJNG retaliatory violence and ongoing succession crisis", f:"u",
+      h:"Hotel Zone beaches, Marina, Old Town (Zona Rom\u00e1ntica), airport access roads",
+      m:"On 22 February 2026, CJNG set vehicles on fire and blocked major roads; the U.S. Embassy issued a shelter-in-place order, Air Canada suspended flights, and some cruise lines skipped port calls. The Code Red was lifted by 25 February. With no clear CJNG successor, factional violence in Jalisco is expected to remain elevated. Monitor U.S. Embassy Mexico security alerts before travel." },
+    { t:"Armed muggings in downtown nightlife zone",
+      h:"Olas Altas and the Zona Rom\u00e1ntica after midnight",
+      m:"Stick to crowded areas; travel in groups; avoid narrow side streets." },
+    { t:"ATM skimming at freestanding machines near the Malec\u00f3n",
+      h:"Convenience store ATMs and standalone machines near Playa de los Muertos",
+      m:"Use hotel or mall-lobby machines; shield PIN and inspect for devices." },
+    { t:"Overcharging or unauthorised taxi services for cruise visitors",
+      h:"Marina cruise dock and airport exit lanes",
+      m:"Use taxis from official port counters; confirm fare before ride." },
+    { t:"Beach theft by visitors or bystanders on busy shores",
+      h:"Playa Los Muertos, Playa de Oro boardwalk",
+      m:"Keep valuables on your person and use hotel lockers; avoid leaving bags on loungers." }
+  ]},
+
+  { name:"Quer\u00e9taro", code:"QRO", country:"Mexico", lat:20.588, lng:-100.389, risks:[
+    { t:"Targeted theft near tourist plazas",
+      h:"Centro Hist\u00f3rico and adjacent pedestrian streets",
+      m:"Keep valuables secured; avoid high-end displays; stay alert in dense areas." },
+    { t:"ATM fraud in independent vending machines",
+      h:"ATMs at small stores near Avenida Zaragoza",
+      m:"Prefer bank-affiliated ATMs inside malls or branches." },
+    { t:"Ride-share scams by unlicensed drivers near airports",
+      h:"Quer\u00e9taro Intercontinental Airport drop-off zones",
+      m:"Book through verified providers; verify driver ID before boarding." },
+    { t:"Occasional express kidnappings linked to criminal groups", f:"u",
+      h:"Highways connecting Quer\u00e9taro city with San Luis Potos\u00ed",
+      m:"Quer\u00e9taro state toll roads were temporarily blocked during the 22 February 2026 CJNG crisis. Use daytime travel; shared transfers; notify contacts of schedule and route." },
+    { t:"Local protests over infrastructure and transport policies",
+      h:"Avenida 5 de Febrero and Secretariat of Government offices",
+      m:"Check local news and avoid low-traffic zones during civil demonstrations." }
+  ]},
+
+  { name:"San Jos\u00e9 del Cabo", code:"SJD", country:"Mexico", lat:23.063, lng:-109.691, risks:[
+    { t:"Cartel-related shootings in peripheral nightlife zones",
+      h:"Old Town Zona Rom\u00e1ntica, downtown after dark",
+      m:"Baja California returned quickly to normal during the 22 February 2026 crisis; Los Cabos remains one of Mexico\u2019s better-secured tourist corridors. Stay in resort or hotel-patrolled areas; avoid wandering the backstreets at night." },
+    { t:"Vehicle break-ins in hotel parking lots",
+      h:"Public lots off Palmilla Road and downtown parking garages",
+      m:"Use valet or secured hotel lots; never leave valuables visible in cars." },
+    { t:"ATM skimming in casino and bar ATMs",
+      h:"Cabo San Lucas casino zone, downtown standalone machines",
+      m:"Use bank ATMs in malls or hotel lobbies; inspect devices before use." },
+    { t:"Expensive or unmetered taxi fares from airport",
+      h:"SJD airport exit lanes",
+      m:"Use prepaid hotel shuttles or official taxi counters only; confirm fees ahead of ride." },
+    { t:"Timeshare and aggressive tour solicitation", f:"n",
+      h:"SJD airport arrivals, Marina Golden Zone, resort hotel lobbies",
+      m:"Decline all unsolicited \u2018welcome gifts\u2019 or \u2018free tours\u2019; these are entry points to high-pressure timeshare presentations. Never surrender your credit card or passport as collateral for any promotional offer. Complaints about aggressive solicitation in Los Cabos have increased significantly since 2025." }
+  ]},
+
+  { name:"San Luis Potos\u00ed", code:"SLP", country:"Mexico", lat:22.149, lng:-100.978, risks:[
+    { t:"Armed robberies in industrial areas", f:"u",
+      h:"Gonz\u00e1lez Ortega airport road, industrial parks north of city",
+      m:"San Luis Potos\u00ed state experienced CJNG roadblocks on 22 February 2026 that were quickly cleared; the state sits at the intersection of several cartel-contested corridors and may see increased violence if CJNG factions splinter further. Avoid remote industrial zones after dark; take registered transport instead." },
+    { t:"Express kidnappings along peripheral highways",
+      h:"Road between city and Valles Pueblo M\u00e1gico",
+      m:"Travel in convoy or use reputable transfer services; notify others of plans." },
+    { t:"ATM fraud at geographic kiosks",
+      h:"ATMs outside Mercado Hidalgo and Plaza Fiesta malls",
+      m:"Use bank-inside ATMs; shield entry and regularly check account activity." },
+    { t:"Taxi scams and overcharging in nightlife districts",
+      h:"Zona Centro and Avenida Venustiano Carranza after dark",
+      m:"Use hotel-recommended taxi services; confirm fare in advance." },
+    { t:"Civic protests around government offices",
+      h:"Parliament plaza and main city avenues",
+      m:"Monitor local news; avoid gathering areas and reroute if necessary." }
+  ]},
+
+  { name:"Tampico", code:"TAM", country:"Mexico", lat:22.233, lng:-97.861, risks:[
+    { t:"Petty gun violence in transit hubs", f:"u",
+      h:"Main bus terminal and central market roads",
+      m:"Tamaulipas is one of five states for which the U.S. issued a shelter-in-place order on 22 February 2026 and carries a Level 4 Do Not Travel advisory. Avoid confrontations; travel in daylight; stay alert in crowded areas." },
+    { t:"Pickpocketing and handbag snatches at markets",
+      h:"Mercado Zona Centro and waterfront promenade",
+      m:"Keep bags secure and close to your body; avoid displaying valuables." },
+    { t:"ATM skimmers at roadside convenience stores",
+      h:"ATMs near Avenida Hidalgo and downtown gas stations",
+      m:"Use bank-affiliated ATMs; inspect card slots; cover PIN entry." },
+    { t:"Unofficial taxis soliciting near docks",
+      h:"Cruise terminals off Avenida Tamaulipas",
+      m:"Use taxis arranged by hotels or official port counters; confirm fare before boarding." },
+    { t:"Targeted thefts during nighttime alcohol-fuelled gatherings",
+      h:"Bars and open-air fiestas along waterfront Avenida Rep\u00fablica",
+      m:"Stay with trusted companions, avoid isolated corners, and leave valuables locked." }
+  ]},
+
+  { name:"Tepic", code:"TPQ", country:"Mexico", lat:21.504, lng:-104.895, risks:[
+    { t:"Armed thefts on streets around nightlife", f:"u",
+      h:"Plaza Bicentenario area and Alameda parks after dusk",
+      m:"Nayarit state was impacted by CJNG retaliatory roadblocks on 22 February 2026; Tepic sits in a cartel-contested corridor between Jalisco and Sinaloa. Limit evening walking; remain in groups and use monitored zones." },
+    { t:"Nighttime roadblocks or extortion attempts on highways",
+      h:"Signalised intersections on toll roads around Tepic",
+      m:"Avoid side roads at night; prefer authorised toll-road stations; remain vigilant." },
+    { t:"Package theft targeting tourist gear at beaches",
+      h:"Playa San Blas and Miramar parking zones",
+      m:"Use lockers or leave gear within sight; avoid leaving items unattended." },
+    { t:"Card skimming at small retail ATMs",
+      h:"Isla de la Piedra snack kiosks and Mercado desayuno zones",
+      m:"Use bank-inside ATMs; shield entry; confirm statements post-trip." },
+    { t:"Labour disruption protests over water rights",
+      h:"Municipal offices and access roads near government centres",
+      m:"Stay clear of protest zones; use alternative transport; monitor local bulletins." }
+  ]},
+
+  { name:"Tulum", code:"TQO", country:"Mexico", lat:20.212, lng:-87.465, risks:[
+    { t:"Drug-related shootings striking tourist areas", f:"u",
+      h:"Beach clubs and hotel zone beaches (stray bullets)",
+      m:"Quintana Roo returned quickly to normal during the 22 February 2026 CJNG crisis with 10,000+ security personnel deployed; however, Tulum has seen several stray-bullet incidents affecting tourists since 2023 and Quintana Roo remains at U.S. Level 2. Avoid staying in properties not directly in the beachfront zones; heed hotel safety alerts." },
+    { t:"Petty theft on crowded beaches and ruins",
+      h:"Tulum ruins entrance, Playa Para\u00edso beach sections",
+      m:"Use lockers or keep valuables on you; avoid leaving items on chairs or towels unattended." },
+    { t:"ATM or POS fraud at beachfront vendors",
+      h:"Outdoor eateries on Avenida Coba",
+      m:"Use only central ATM kiosks; pay cash or use chip-and-PIN-only cards; monitor statements." },
+    { t:"Taxi scams and unofficial transfers in centre",
+      h:"Tulum downtown near bus and taxi stands",
+      m:"Use hotel shuttles or authorised apps; confirm price upfront; avoid drivers soliciting in streets." },
+    { t:"Protest or roadblocks by environmental activists",
+      h:"Access roads to Sian Ka\u2019an reserves and cenote tours",
+      m:"Tour with licensed operators; confirm route ahead; observe closure signage." }
+  ]},
+
+  { name:"Veracruz", code:"VER", country:"Mexico", lat:19.173, lng:-96.134, risks:[
+    { t:"Organised crime violence targeting transport workers", f:"u",
+      h:"Downtown zones near San Juan de Ul\u00faa and main roads near port terminals",
+      m:"Veracruz state was among those where CJNG roadblocks were reported on 22 February 2026; the state is on key cartel transit routes and likely to see continued violence as CJNG succession plays out. Use trusted transport options, especially to and from port." },
+    { t:"ATM scams and petty theft in market areas",
+      h:"Centro Hist\u00f3rico, Z\u00f3calo crowd clusters",
+      m:"Use ATMs inside banks; keep valuables hidden; remain vigilant in dense crowds." },
+    { t:"Fraud or extortion attempts targeting taxis or passengers",
+      h:"Malec\u00f3n waterfront and airport arrival lanes",
+      m:"Only use licensed taxis; confirm fares; avoid unsolicited offers." },
+    { t:"Protests or blockades over utility or labour disputes",
+      h:"Government plaza, downtown administrative offices",
+      m:"Monitor local news; avoid protest zones; reroute if needed." },
+    { t:"Opportunistic robberies targeting after-dark pedestrian traffic",
+      h:"Side streets off Avenida Libertad and near Veracruz port promenade",
+      m:"Stick to main roads; travel in groups; limit nighttime walking outside central zones." }
+  ]},
+
+  // ── CUBA ───────────────────────────────────────────────────────────────────
+  { name:"Havana", code:"HAV", country:"Cuba", lat:23.136, lng:-82.359, risks:[
+    { t:"Pickpocketing in tourist zones",
+      h:"Old Havana, Calle Obispo, Plaza de Armas",
+      m:"Keep valuables in interior pockets and avoid large crowds with visible electronics." },
+    { t:"Scams involving fake guides or \u2018friends\u2019",
+      h:"Malec\u00f3n, Central Park area",
+      m:"Avoid unsolicited offers of help, and only hire licensed guides." },
+    { t:"Currency confusion and overcharging", f:"u",
+      h:"Private restaurants (paladares) and market stalls",
+      m:"Cuba\u2019s severe economic crisis has worsened since 2025, with frequent power outages lasting 12+ hours daily; street crime and desperation-motivated theft have increased markedly. Carry limited cash and be especially cautious during blackouts." },
+    { t:"Fake taxi drivers targeting tourists",
+      h:"Jos\u00e9 Mart\u00ed International Airport, Habana Vieja",
+      m:"Book taxis through official hotels and insist on a fixed fare." },
+    { t:"Protests with potential police presence", f:"u",
+      h:"Revolution Square and nearby ministries, residential neighbourhoods island-wide",
+      m:"Do not photograph or engage in protests. Anti-government protests have continued since 2021; the government has increased surveillance and detention of individuals, including foreigners. Internet access for travellers is intermittent and monitored." }
+  ]},
+
+  // ── TURKS AND CAICOS ───────────────────────────────────────────────────────
+  { name:"Providenciales", code:"PLS", country:"Turks and Caicos", lat:21.774, lng:-72.265, risks:[
+    { t:"Increasing rates of armed burglary", f:"u",
+      h:"Long Bay Hills, Leeward Highway neighbourhoods",
+      m:"Secure accommodations, especially vacation rentals, and avoid walking alone at night. The U.S. and UK have both issued elevated advisories; several American tourists were victims of violent crime in 2024\u20132025, prompting consular warnings." },
+    { t:"Bag-snatching and petty theft",
+      h:"Grace Bay Beach, shopping centres",
+      m:"Stay aware of surroundings and keep valuables locked or hidden." },
+    { t:"ATM card cloning at tourist areas",
+      h:"Graceway Gourmet area and gas stations",
+      m:"Use ATMs inside banks and inspect machines for signs of tampering." },
+    { t:"Theft from rental cars",
+      h:"Sapodilla Bay, remote beach access points",
+      m:"Do not leave items visible in the vehicle and lock all doors when away." },
+    { t:"Firearms and ammunition import laws", f:"n",
+      h:"JAGS McCartney International Airport customs, all entry points",
+      m:"Turks and Caicos imposes a mandatory minimum prison sentence of 12 years for possession of a single bullet or firearm without a local licence. Several American tourists have been prosecuted after arriving with forgotten ammunition in checked luggage since 2023. Check all bags thoroughly before travel, including for loose ammunition, and do not attempt to import any firearms or ammunition." }
+  ]},
+
+  // ── CAYMAN ISLANDS ─────────────────────────────────────────────────────────
+  { name:"Grand Cayman", code:"GCM", country:"Cayman Islands", lat:19.307, lng:-81.254, risks:[
+    { t:"Theft from parked vehicles at tourist sites",
+      h:"Seven Mile Beach car parks, Rum Point",
+      m:"Lock all doors, avoid leaving items in plain view, and park in well-lit areas." },
+    { t:"Burglaries targeting vacation rentals",
+      h:"West Bay and Bodden Town neighbourhoods",
+      m:"Choose accommodations with strong security features, and secure doors/windows when leaving." },
+    { t:"Unlicensed taxi drivers",
+      h:"Owen Roberts International Airport, cruise ship terminal",
+      m:"Use registered taxi services or request hotel transportation; agree on the fare upfront." },
+    { t:"ATM tampering and card skimming",
+      h:"ATMs in George Town and gas stations",
+      m:"Use ATMs located inside banks or resorts, and shield your PIN during entry." },
+    { t:"Isolated protests over development or cost of living",
+      h:"Heroes Square, George Town waterfront",
+      m:"Stay updated via local media and avoid gathering points if demonstrations occur." }
+  ]},
+
+  // ── JAMAICA ────────────────────────────────────────────────────────────────
+  { name:"Montego Bay", code:"MBJ", country:"Jamaica", lat:18.473, lng:-77.920, risks:[
+    { t:"Gang violence and armed robberies", f:"u",
+      h:"Norwood, Flankers, and Mount Salem neighbourhoods",
+      m:"Jamaica maintains a U.S. Level 3 (Reconsider Travel) advisory; Montego Bay\u2019s St. James parish has seen continued states of emergency and curfews in recent years and crime remains elevated. Remain in resort zones or escorted tours; avoid wandering off-path, especially at night. Confirm security conditions with your resort before excursions." },
+    { t:"Bag-snatching and theft on beaches",
+      h:"Doctor\u2019s Cave Beach, Walter Fletcher Beach",
+      m:"Don\u2019t leave belongings unattended; use waterproof bags and lockers when available." },
+    { t:"Taxi scams and unauthorised vehicles",
+      h:"Sangster International Airport, Gloucester Avenue",
+      m:"Only use licensed taxis (red licence plates), ideally pre-arranged by hotels." },
+    { t:"Credit card fraud at small vendors",
+      h:"Local shops and craft markets",
+      m:"Use cash or tap-enabled cards, and monitor transactions after your visit." },
+    { t:"Protests tied to economic issues and law enforcement",
+      h:"Sam Sharpe Square, Barnett Street",
+      m:"Avoid political gatherings; monitor The Gleaner and Loop Jamaica for disruption alerts." }
+  ]},
+
+  // ── DOMINICAN REPUBLIC ─────────────────────────────────────────────────────
+  { name:"Puerto Plata", code:"POP", country:"Dominican Republic", lat:19.793, lng:-70.699, risks:[
+    { t:"Pickpocketing and beach thefts",
+      h:"Playa Dorada, Malec\u00f3n boardwalk",
+      m:"Keep personal items within arm\u2019s reach; use hotel safes for valuables." },
+    { t:"Robberies near tourist transport hubs",
+      h:"Puerto Plata bus terminals, airport area access roads",
+      m:"Avoid isolated areas, especially at night, and arrange secure transfers with your hotel." },
+    { t:"Taxi overcharging and scams",
+      h:"Gregorio Luperón International Airport, local resorts",
+      m:"Agree on fares before entry or use ride-hailing apps where available." },
+    { t:"ATM skimming at freestanding kiosks",
+      h:"Outside tourist restaurants and beach zones",
+      m:"Use ATMs in banks or hotels, and always inspect for unusual hardware." },
+    { t:"Demonstrations over local policies or blackouts",
+      h:"Central Park and public offices",
+      m:"Avoid protest zones and monitor news from Diario Libre or List\u00edn Diario." }
+  ]},
+
+  { name:"Santo Domingo", code:"SDQ", country:"Dominican Republic", lat:18.486, lng:-69.931, risks:[
+    { t:"Armed street crime and express kidnappings",
+      h:"Villa Juana, La Zurza, and areas around Avenida Duarte",
+      m:"Avoid non-tourist neighbourhoods, especially after dark. Use only trusted transportation services." },
+    { t:"Pickpocketing in crowded commercial areas",
+      h:"Colonial Zone, Mercado Modelo, and Malec\u00f3n promenade",
+      m:"Keep belongings in zipped bags worn on the front, and avoid displaying phones or jewellery." },
+    { t:"Taxi scams involving inflated prices or detours",
+      h:"Las Am\u00e9ricas International Airport, Zona Colonial",
+      m:"Use hotel-vetted drivers or ride-hailing apps like Uber and InDrive." },
+    { t:"ATM fraud and card skimming",
+      h:"Supermarket ATMs and kiosks along Avenida Winston Churchill",
+      m:"Use bank-based ATMs in daylight, inspect machines, and monitor accounts for unauthorised charges." },
+    { t:"Demonstrations with police presence",
+      h:"Near Palacio Nacional, Plaza de la Bandera",
+      m:"Avoid political gatherings, even peaceful ones. Monitor Diario Libre and Hoy for updates." }
+  ]},
+
+  { name:"Santiago", code:"STI", country:"Dominican Republic", lat:19.451, lng:-70.697, risks:[
+    { t:"Violent street robberies in certain districts",
+      h:"Cienfuegos, Bella Vista, and areas near Av. 27 de Febrero",
+      m:"Avoid walking in low-income neighbourhoods. Travel with local guides or hotel transport." },
+    { t:"Theft from parked vehicles",
+      h:"Shopping centres like Colinas Mall and La Sirena",
+      m:"Do not leave valuables in view; always lock vehicles and park near security." },
+    { t:"ATM tampering and unauthorised withdrawals",
+      h:"ATM machines near university areas and gas stations",
+      m:"Choose ATMs located inside banks or malls. Cover keypad when entering PIN." },
+    { t:"Unregulated taxis and fare manipulation",
+      h:"Cibao International Airport and city taxi stands",
+      m:"Use apps like Uber or hotel taxis, and confirm price upfront." },
+    { t:"Civil protests and labour strikes",
+      h:"Parque Duarte and city administrative buildings",
+      m:"Avoid large gatherings and follow local media reports (El Caribe, ACento)." }
+  ]},
+
+  { name:"Punta Cana", code:"PUJ", country:"Dominican Republic", lat:18.582, lng:-68.403, risks:[
+    { t:"Theft from tourists on beaches or poolsides",
+      h:"B\u00e1varo Beach, resort lounges",
+      m:"Use poolside lockers when available; never leave bags unattended." },
+    { t:"Hotel-area robbery or break-ins at night",
+      h:"El Cortecito, Ver\u00f3n outskirts",
+      m:"Stay in hotels with strong security; lock doors and windows at all times." },
+    { t:"Card skimming at tourist restaurants or bars",
+      h:"Plaza San Juan, beach clubs",
+      m:"Monitor transactions, use chip/tap cards, and carry minimal cash or cards at outings." },
+    { t:"Overpriced airport taxis or shuttle scams",
+      h:"Punta Cana International Airport",
+      m:"Prearrange transfers through your resort or use official airport taxi desks." },
+    { t:"Alcohol-related incidents at resort bars", f:"n",
+      h:"All-inclusive resort bars, beach clubs, and late-night entertainment areas",
+      m:"Exercise caution with unlimited all-inclusive alcohol; never leave your drink unattended. Multiple incidents of tourists being incapacitated after drinking at Dominican resorts have been reported since 2023, including cases involving possible tampering. Moderate consumption and stay with trusted companions." }
+  ]},
+
+  // ── PUERTO RICO ────────────────────────────────────────────────────────────
+  { name:"Aguadilla", code:"BQN", country:"Puerto Rico", lat:18.430, lng:-67.154, risks:[
+    { t:"Armed robberies and carjackings",
+      h:"Highway 2 intersections, Aguadilla Pueblo at night",
+      m:"Avoid poorly lit areas, keep vehicle doors locked, and park in secure locations." },
+    { t:"Vehicle break-ins near beaches and parks",
+      h:"Crash Boat Beach, Pe\u00f1a Blanca parking lots",
+      m:"Do not leave valuables inside the car. Park near other vehicles and security cameras when possible." },
+    { t:"ATM skimming at convenience stores",
+      h:"Standalone machines in Aguadilla Mall and gas stations",
+      m:"Use ATMs inside banks or major stores; check for suspicious devices." },
+    { t:"Protests or road blockades over utility outages", f:"u",
+      h:"Near Plaza de Recreo and local government buildings",
+      m:"Protests over LUMA Energy\u2019s management have occurred periodically since 2025 and may affect road access near government facilities. Stay informed via El Nuevo D\u00eda, and avoid active protest zones." },
+    { t:"Overcharging by informal taxi drivers",
+      h:"Rafael Hern\u00e1ndez Airport and nearby tourist areas",
+      m:"Confirm fare before entry, and use hotel-recommended services." }
+  ]},
+
+  { name:"San Juan", code:"SJU", country:"Puerto Rico", lat:18.467, lng:-66.118, risks:[
+    { t:"Violent crime in high-risk neighbourhoods",
+      h:"La Perla, Puerta de Tierra, parts of Santurce",
+      m:"Avoid non-tourist neighbourhoods after dark. Stick to Condado, Isla Verde, and Old San Juan." },
+    { t:"Pickpocketing and bag theft in crowded areas",
+      h:"Calle Fortaleza, Paseo de la Princesa",
+      m:"Carry zipped bags across your chest and limit valuables when exploring Old San Juan." },
+    { t:"Credit card skimming in tourist zones",
+      h:"Restaurants in Condado and cruise port kiosks",
+      m:"Use contactless payment when possible; monitor accounts regularly." },
+    { t:"Fake or unregulated taxis",
+      h:"Luis Mu\u00f1oz Mar\u00edn Airport, outside major hotels",
+      m:"Use the official taxi kiosk or trusted ride-share apps like Uber." },
+    { t:"Protests over political or utility issues", f:"u",
+      h:"Capitolio (Capitol Building), La Fortaleza",
+      m:"Protests over Puerto Rico\u2019s power utility (LUMA Energy) and ongoing statehood debates have continued into 2026; some have involved road closures in Miramar and Hato Rey. Monitor media and avoid public demonstrations even if peaceful." }
+  ]},
+
+  // ── U.S. VIRGIN ISLANDS ────────────────────────────────────────────────────
+  { name:"St. Thomas", code:"STT", country:"U.S. Virgin Islands", lat:18.342, lng:-65.000, risks:[
+    { t:"Armed robberies targeting tourists",
+      h:"Charlotte Amalie waterfront, Long Bay Road",
+      m:"Avoid secluded areas at night, travel in groups, and use registered taxis." },
+    { t:"Theft from beachgoers and cruise passengers",
+      h:"Magens Bay, Sapphire Beach",
+      m:"Don\u2019t leave items unattended; use resort lockers or safes." },
+    { t:"ATM tampering at gas stations and shops",
+      h:"Tutu Mall and Charlotte Amalie kiosks",
+      m:"Use ATMs inside banks or well-monitored areas; check for unusual attachments." },
+    { t:"Unregulated taxi charges",
+      h:"Cyril E. King Airport, cruise terminals",
+      m:"Confirm fare rates, or book through your hotel or cruise provider." },
+    { t:"Protests affecting traffic or cruise port access",
+      h:"Legislature Building, Veterans Drive",
+      m:"Check updates via The Virgin Islands Daily News and avoid congested areas during demonstrations." }
+  ]},
+
+  // ── SAINT KITTS AND NEVIS ──────────────────────────────────────────────────
+  { name:"St. Kitts", code:"SKB", country:"Saint Kitts and Nevis", lat:17.358, lng:-62.783, risks:[
+    { t:"Street muggings and armed robbery",
+      h:"Basseterre backstreets, especially around Independence Square after dark",
+      m:"Avoid walking alone at night outside tourist zones. Use hotel-arranged transport." },
+    { t:"Theft from parked rental vehicles",
+      h:"Timothy Hill Overlook, Black Rocks car parks",
+      m:"Do not leave valuables in vehicles. Park in busy, well-lit areas." },
+    { t:"ATM fraud and card skimming",
+      h:"ATMs near The Circus and Port Zante",
+      m:"Use bank branch ATMs and inspect machines before use. Cover your PIN entry." },
+    { t:"Taxi overcharging or detour scams",
+      h:"Robert L. Bradshaw International Airport and Port Zante",
+      m:"Agree on fare before boarding or request a rate sheet. Use government-licensed taxis." },
+    { t:"Protests related to politics or public services",
+      h:"Government Headquarters, The Circus",
+      m:"Avoid protest gatherings and monitor local news like SKNVibes for advisories." }
+  ]},
+
+  // ── ANTIGUA AND BARBUDA ────────────────────────────────────────────────────
+  { name:"Antigua", code:"ANU", country:"Antigua and Barbuda", lat:17.127, lng:-61.847, risks:[
+    { t:"Opportunistic theft from tourists",
+      h:"Heritage Quay, Redcliffe Quay, Dickenson Bay",
+      m:"Keep bags close, avoid showing valuables in crowded areas, and use hotel safes." },
+    { t:"Armed home or villa invasions",
+      h:"Jolly Harbour and English Harbour rental properties",
+      m:"Choose accommodations with security, lock all access points, and avoid isolated properties." },
+    { t:"ATM and credit card fraud",
+      h:"Town ATMs in St. John\u2019s and near major hotels",
+      m:"Use secure ATMs in banks or resorts, and notify your card issuer before travelling." },
+    { t:"Inflated taxi fares for tourists",
+      h:"V.C. Bird International Airport and cruise terminal areas",
+      m:"Confirm fares before travel; request price lists or use resort shuttles when available." },
+    { t:"Public strikes or labour disputes disrupting services",
+      h:"Government buildings in St. John\u2019s",
+      m:"Monitor Antigua Observer, avoid crowded rallies, and plan for potential disruptions." }
+  ]},
+
+  // ── DOMINICA ───────────────────────────────────────────────────────────────
+  { name:"Dominica", code:"DOM", country:"Dominica", lat:15.415, lng:-61.371, risks:[
+    { t:"Theft from vehicles and guesthouses",
+      h:"Trafalgar Falls, Botanical Gardens parking lots",
+      m:"Do not leave valuables in vehicles. Use secure lodging with lockable storage." },
+    { t:"Robberies in rural or isolated areas",
+      h:"Scotts Head, Soufri\u00e8re hiking trails",
+      m:"Don\u2019t hike alone or at night. Travel with a local guide for excursions." },
+    { t:"ATM skimming in town centres",
+      h:"Roseau central business district",
+      m:"Prefer ATMs inside bank branches. Inspect the machine and use your hand to shield PIN entry." },
+    { t:"Unlicensed taxis or fare overcharges",
+      h:"Roseau ferry terminal and Douglas-Charles Airport",
+      m:"Use officially marked taxis with ID plates. Agree on the fare before the ride begins." },
+    { t:"Environmental or land-rights protests",
+      h:"Parliament Building and Roseau waterfront",
+      m:"Avoid demonstrations. Check for travel advisories via Dominica News Online." }
+  ]},
+
+  // ── SAINT LUCIA ────────────────────────────────────────────────────────────
+  { name:"St. Lucia", code:"UVF", country:"Saint Lucia", lat:13.909, lng:-60.979, risks:[
+    { t:"Armed robbery and assaults on tourists",
+      h:"Castries market area, George Charles Boulevard, and remote beach paths",
+      m:"Avoid venturing off-path alone, especially at night. Stay in well-populated areas or take guided excursions." },
+    { t:"Beach and villa theft",
+      h:"Reduit Beach, Soufri\u00e8re rental properties",
+      m:"Use safes, lock doors and windows, and don\u2019t leave valuables unattended on the beach." },
+    { t:"Card cloning at bars and roadside shops",
+      h:"Rodney Bay strip, near Gros Islet",
+      m:"Use tap-to-pay if possible. Review charges before signing receipts." },
+    { t:"Taxi overpricing without meters",
+      h:"Hewanorra International Airport and Castries cruise port",
+      m:"Request a fare estimate or flat rate from your hotel. Use licensed drivers only." },
+    { t:"Demonstrations affecting major roadways",
+      h:"Constitution Park, Bridge Street, near Parliament",
+      m:"Avoid protest areas. Confirm road conditions with local contacts or hotel staff." }
+  ]},
+
+  // ── BARBADOS ───────────────────────────────────────────────────────────────
+  { name:"Bridgetown", code:"BGI", country:"Barbados", lat:13.097, lng:-59.618, risks:[
+    { t:"Armed robberies in urban and nightlife areas",
+      h:"Baxter\u2019s Road, Nelson Street, and Bay Street at night",
+      m:"Avoid poorly lit streets after dark and use private transport instead of walking." },
+    { t:"Theft from beachgoers and vehicles",
+      h:"Browne\u2019s Beach, Pebbles Beach car parks",
+      m:"Bring only essentials to the beach, and never leave items unattended or in plain view in cars." },
+    { t:"ATM card cloning",
+      h:"Convenience store ATMs and standalone machines in Bridgetown",
+      m:"Use machines inside banks, hotels, or malls. Inspect card slots for tampering." },
+    { t:"Unregulated taxi fares",
+      h:"Grantley Adams International Airport and Bridgetown port",
+      m:"Agree on fares before starting a ride or ask for a fare card." },
+    { t:"Protests related to public services or politics",
+      h:"Independence Square, Chamberlain Bridge",
+      m:"Monitor local news (Nation News, Barbados Today) and avoid large gatherings." }
+  ]},
+
+  // ── TRINIDAD AND TOBAGO ────────────────────────────────────────────────────
+  { name:"Port of Spain", code:"POS", country:"Trinidad and Tobago", lat:10.652, lng:-61.519, risks:[
+    { t:"Gang-related shootings and violent crime", f:"u",
+      h:"Laventille, Beetham Gardens, Sea Lots",
+      m:"Do not enter high-crime districts, even during the day. Trinidad maintains a U.S. Level 2 advisory; gang violence has remained elevated, with Laventille and Beetham experiencing some of the highest homicide rates in the Caribbean. Stay within secure hotel zones." },
+    { t:"Robberies targeting tourists and business travellers",
+      h:"Ariapita Avenue, Queen\u2019s Park Savannah",
+      m:"Avoid walking alone after dark; rely on hotel transportation or pre-vetted taxis." },
+    { t:"ATM and card fraud",
+      h:"Independence Square ATMs and convenience stores",
+      m:"Use only bank-affiliated ATMs. Report any suspicious behaviour immediately." },
+    { t:"Kidnappings and express robbery by rogue taxis",
+      h:"Around City Gate terminal and unmarked cars near malls",
+      m:"Avoid \u2018PH\u2019 (private hire) taxis. Only use registered or hotel-arranged transport." },
+    { t:"Political and labour-related protests",
+      h:"Red House (Parliament), Brian Lara Promenade",
+      m:"Avoid protest gatherings and check updates via Trinidad Express and Newsday." }
+  ]},
+
+  // ── DUTCH CARIBBEAN ────────────────────────────────────────────────────────
+  { name:"Sint Maarten", code:"SXM", country:"Dutch Caribbean", lat:18.024, lng:-63.047, risks:[
+    { t:"Theft from hotel rooms and rental cars",
+      h:"Simpson Bay, Maho Beach car parks",
+      m:"Lock valuables in safes and avoid leaving items in view inside vehicles." },
+    { t:"Armed muggings at night",
+      h:"Philipsburg alleyways and isolated stretches of Beacon Hill",
+      m:"Stay on main roads, especially after dark. Use known transportation services." },
+    { t:"Card skimming in convenience stores",
+      h:"Around Front Street and Cupecoy",
+      m:"Use chip cards and inspect machines before use. Avoid standalone ATMs." },
+    { t:"Unlicensed taxis overcharging tourists",
+      h:"Princess Juliana International Airport and cruise docks",
+      m:"Confirm pricing with official taxi boards or use hotel transport services." },
+    { t:"Protests occasionally disrupting downtown",
+      h:"Government Administration Building in Philipsburg",
+      m:"Stay informed through The Daily Herald and steer clear of protest routes." }
+  ]},
+
+  { name:"Aruba", code:"AUA", country:"Dutch Caribbean", lat:12.521, lng:-69.968, risks:[
+    { t:"Opportunistic beach theft",
+      h:"Eagle Beach, Palm Beach resort stretch",
+      m:"Don\u2019t leave belongings unattended on the beach. Use lockers when available." },
+    { t:"Credit card fraud and ATM skimming",
+      h:"ATMs near resorts and Oranjestad shopping streets",
+      m:"Use ATMs in bank branches; inspect card slots before use." },
+    { t:"Overpriced or unmetered taxis",
+      h:"Queen Beatrix Airport, hotel zones",
+      m:"Use taxis with official licence plates and confirm fares in advance." },
+    { t:"Late-night incidents involving intoxicated tourists",
+      h:"Near bars in Palm Beach and Oranjestad",
+      m:"Stay in groups, moderate alcohol consumption, and avoid walking alone late." },
+    { t:"Demonstrations or labour disputes",
+      h:"Parliament Building, Plaza Betico Croes",
+      m:"Avoid demonstrations and monitor local news like Diario Aruba." }
+  ]},
+
+  { name:"Cura\u00e7ao", code:"CUR", country:"Dutch Caribbean", lat:12.169, lng:-68.990, risks:[
+    { t:"Armed home and business break-ins",
+      h:"Seru Fortuna, Santa Rosa",
+      m:"Choose accommodations with security. Avoid leaving valuables visible through windows." },
+    { t:"Tourist theft at beaches and dive sites",
+      h:"Playa Lagun, Mambo Beach",
+      m:"Keep belongings within sight. Don\u2019t leave items unattended while swimming." },
+    { t:"ATM skimming",
+      h:"Willemstad convenience stores and ATMs in Punda",
+      m:"Use bank ATMs; avoid machines in low-traffic areas." },
+    { t:"Overcharging or taxi refusal without tips",
+      h:"Hato International Airport, Willemstad",
+      m:"Agree on price upfront and carry small bills for easier negotiation." },
+    { t:"Protests regarding economic issues",
+      h:"Fort Amsterdam and Plaza Wilhelmina",
+      m:"Avoid crowds and check alerts through Amigoe or Cura\u00e7ao Chronicle." }
+  ]},
+
+  { name:"Bonaire", code:"BON", country:"Dutch Caribbean", lat:12.202, lng:-68.262, risks:[
+    { t:"Petty theft in rental areas",
+      h:"Kralendijk, Lac Bay",
+      m:"Lock doors and windows in accommodations. Do not leave gear in vehicles." },
+    { t:"ATM fraud and card skimming",
+      h:"Supermarket ATMs and tourist kiosks",
+      m:"Use machines in secure bank lobbies. Inspect before use and shield your PIN." },
+    { t:"Inflated taxi pricing for tourists",
+      h:"Flamingo International Airport",
+      m:"Pre-negotiate the fare or ask your hotel for trusted transport." },
+    { t:"Rare but rising burglaries in rural villas",
+      h:"Rincon and southern coastal areas",
+      m:"Opt for accommodations with reviews citing security; use safes." },
+    { t:"Protests about environmental or autonomy issues",
+      h:"Governor\u2019s House and Wilhelmina Square",
+      m:"Respect local demonstrations and avoid joining or photographing protests." }
+  ]},
+
+  // ── COLOMBIA ───────────────────────────────────────────────────────────────
+  { name:"Medell\u00edn", code:"MDE", country:"Colombia", lat:6.244, lng:-75.574, risks:[
+    { t:"Armed robberies and theft targeting foreigners", f:"u",
+      h:"El Poblado (especially Parque Lleras), Laureles nightlife zones",
+      m:"Avoid walking alone at night, use ride-hailing apps, and limit flashy items or jewellery. Colombia is classified at U.S. Level 3 (Reconsider Travel). Scopolamine drugging remains a documented and significant threat in Medell\u00edn\u2019s nightlife zones." },
+    { t:"Pickpocketing and distraction thefts",
+      h:"Metro stations (San Antonio, Industriales), public buses",
+      m:"Use anti-theft bags, avoid showing phones in crowds, and stay vigilant at transport hubs." },
+    { t:"\u2018Scopolamine\u2019 drugging and express kidnapping", f:"u",
+      h:"Dating app meetups in El Centro and Laureles; upscale bars in El Poblado",
+      m:"Don\u2019t meet strangers in private settings; stick to public venues and stay in groups. Reports of scopolamine-spiked drinks increased significantly in 2025. Never leave your drink unattended; seek medical attention immediately if you feel suddenly disoriented." },
+    { t:"Fake taxis or app-based robbery setups",
+      h:"Outside Jos\u00e9 Mar\u00eda C\u00f3rdova Airport and city nightlife zones",
+      m:"Use official airport taxis or apps like Cabify; verify driver and vehicle before entering." },
+    { t:"Civil unrest and police crackdowns",
+      h:"Parque de los Deseos, La Alpujarra Administrative Centre",
+      m:"Avoid protest areas; follow updates via El Colombiano and embassy alerts." }
+  ]},
+
+  { name:"Bogot\u00e1", code:"BOG", country:"Colombia", lat:4.711, lng:-74.072, risks:[
+    { t:"Armed muggings and street thefts", f:"u",
+      h:"Chapinero, Centro Internacional, TransMilenio bus stations",
+      m:"Keep electronics hidden, stay in well-lit areas, and avoid isolated streets at night. Colombia is Level 3; U.S.\u2013Colombia diplomatic tensions have heightened anti-American sentiment in some areas \u2014 maintain a low profile regarding nationality." },
+    { t:"ATM fraud and card skimming",
+      h:"Zona Rosa and downtown standalone ATMs",
+      m:"Use ATMs inside banks, hotels, or malls; inspect machines for tampering." },
+    { t:"Drugging incidents via nightlife or dating apps", f:"u",
+      h:"La Candelaria bars, Zona T lounges, Usaqu\u00e9n restaurants",
+      m:"Never leave drinks unattended; avoid going to unknown locations with new acquaintances. Scopolamine druggings in Bogot\u00e1\u2019s upscale nightlife zones have increased significantly since 2025. Seek emergency medical attention immediately if symptoms of sudden disorientation appear." },
+    { t:"Robbery in fake or unmarked taxis",
+      h:"El Dorado Airport exits, Calle 26 corridors",
+      m:"Use airport-authorised or app-based transportation only." },
+    { t:"Demonstrations met with heavy policing",
+      h:"Plaza de Bol\u00edvar, Carrera S\u00e9ptima",
+      m:"Steer clear of protests; follow media like Semana and El Tiempo for alerts." }
+  ]},
+
+  // ── GUYANA ─────────────────────────────────────────────────────────────────
+  { name:"Georgetown", code:"GEO", country:"Guyana", lat:6.805, lng:-58.155, risks:[
+    { t:"Armed robberies and assaults after dark",
+      h:"Stabroek Market, Albouystown, Bourda",
+      m:"Avoid walking at night; travel with a trusted local or hotel-arranged taxi." },
+    { t:"Mugging and pickpocketing in markets",
+      h:"Stabroek and Bourda Markets",
+      m:"Avoid carrying valuables; remain aware of surroundings and use a money belt." },
+    { t:"Credit card fraud and ATM scams",
+      h:"Robb Street retail areas, Lamaha Street ATMs",
+      m:"Use indoor bank ATMs; check machines for alterations; monitor transactions frequently." },
+    { t:"Taxi scams and overcharging",
+      h:"Cheddi Jagan Airport taxi zone and minibus parks",
+      m:"Confirm fare in advance and use only marked yellow or hotel-arranged taxis." },
+    { t:"Ethnic-political protests or blockades",
+      h:"Brickdam and areas near Parliament",
+      m:"Avoid gatherings; monitor via Stabroek News or Kaieteur News." }
+  ]},
+
+  // ── ECUADOR ────────────────────────────────────────────────────────────────
+  { name:"Quito", code:"UIO", country:"Ecuador", lat:-0.180, lng:-78.468, risks:[
+    { t:"Armed robberies and assaults on tourists", f:"u",
+      h:"Historic Centre (Centro Hist\u00f3rico), La Mariscal",
+      m:"Ecuador is under a declared state of internal armed conflict; a curfew (11 pm\u20135 am) covers multiple coastal provinces as of March 2026; the U.S. added a \u2018terrorism\u2019 risk indicator in October 2025. Ecuador now records the highest homicide rate in Latin America (~50 per 100,000 inhabitants). A car bomb exploded near the Sheraton Hotel in Guayaquil in October 2025. While Quito is safer than the coast, maintain high vigilance." },
+    { t:"Pickpocketing in transit and plazas",
+      h:"Plaza Grande, El Ejido Park, Trole\u00fas stations",
+      m:"Keep wallets in front pockets and bags zipped; use anti-theft gear." },
+    { t:"Drug-facilitated theft via nightlife encounters",
+      h:"La Floresta bars, Amazonas Avenue",
+      m:"Don\u2019t leave drinks unattended; avoid moving to unknown locations with new acquaintances." },
+    { t:"Express kidnappings for ATM withdrawals", f:"u",
+      h:"ATM kiosks near La Mariscal, bus terminals, and taxi ranks citywide",
+      m:"Seven kidnappings per day are recorded nationally; many involve taxi or ride-share drivers working with criminal networks. Only use apps with real-time GPS tracking and share your ride status with a contact." },
+    { t:"Frequent protests with road closures", f:"u",
+      h:"Avenida 10 de Agosto, Parque El Arbolito",
+      m:"Ecuador\u2019s state of emergency grants security forces broad powers; carry your passport or a certified copy at all times and comply calmly with any checkpoint interactions. Monitor local radio, avoid crowds, and reroute when demonstrations flare up." }
+  ]},
+
+  // ── PERU ───────────────────────────────────────────────────────────────────
+  { name:"Lima", code:"LIM", country:"Peru", lat:-12.046, lng:-77.042, risks:[
+    { t:"Armed street crime and muggings",
+      h:"San Mart\u00edn de Porres, Callao, downtown Lima after dark",
+      m:"Stick to Miraflores and Barranco; avoid travelling alone at night; limit visible valuables." },
+    { t:"Pickpocketing in buses and public markets",
+      h:"Gamarra Market, Metropolitano bus lines",
+      m:"Stay vigilant in crowded spaces and use front-carry bags or internal compartments." },
+    { t:"\u2018Express kidnappings\u2019 for ATM withdrawals",
+      h:"Callao, combi minibuses, outer neighbourhoods",
+      m:"Use hotel taxis or apps like Beat or Uber; avoid hailing cars on the street." },
+    { t:"ATM and card skimming",
+      h:"Miraflores and Kennedy Park ATMs",
+      m:"Only use indoor ATMs and monitor card usage closely." },
+    { t:"Political protests, often disruptive or violent", f:"u",
+      h:"Plaza San Mart\u00edn, Congress building",
+      m:"Avoid protest zones and check for curfews or roadblocks via El Comercio. Machu Picchu rail access has been disrupted multiple times by strikes on the train lines serving Aguas Calientes \u2014 confirm rail and bus schedules 48 hours before visiting Andean sites." }
+  ]},
+
+  // ── BRAZIL ─────────────────────────────────────────────────────────────────
+  { name:"S\u00e3o Paulo", code:"GRU", country:"Brazil", lat:-23.549, lng:-46.633, risks:[
+    { t:"Armed muggings in business and tourist areas", f:"u",
+      h:"Avenida Paulista, Rep\u00fablica, S\u00e9 Cathedral",
+      m:"Avoid walking alone after dark, use authorised ride-hailing apps, and limit flashy accessories. S\u00e3o Paulo metro area sees high rates of robbery and \u2018lightning kidnappings\u2019 (sequestro rel\u00e2mpago) in which victims are driven to ATMs." },
+    { t:"Pickpocketing and bag-snatching on public transport",
+      h:"Luz Station, Metro Line 3, city buses",
+      m:"Stay alert in crowded carriages, carry bags in front, and avoid distractions from strangers." },
+    { t:"Drugging incidents tied to nightlife",
+      h:"Vila Madalena, Augusta Street clubs",
+      m:"Never leave drinks unattended, and avoid meeting new acquaintances in private locations." },
+    { t:"ATM fraud and card cloning",
+      h:"ATMs in Consola\u00e7\u00e3o and Avenida Paulista",
+      m:"Use bank-affiliated ATMs inside buildings, check machines for tampering, and cover PIN entry." },
+    { t:"Protests and demonstrations with heavy police presence",
+      h:"Pra\u00e7a da S\u00e9, MASP Museum steps",
+      m:"Follow updates from Folha de S.Paulo, avoid protest gatherings, and seek alternative routes." }
+  ]},
+
+  { name:"Rio de Janeiro", code:"GIG", country:"Brazil", lat:-22.908, lng:-43.196, risks:[
+    { t:"Robberies and violent crime near favelas", f:"u",
+      h:"Santa Teresa hills, Lapa arches, areas bordering Rocinha",
+      m:"Avoid entering favelas unless with a registered tour; stay in well-populated, lit zones. Rio continues to see violent police operations in favelas that can spill into tourist areas; stray bullet incidents affecting bystanders have been documented. Check neighbourhood safety conditions with hotel staff before venturing into hillside or peripheral areas." },
+    { t:"Street theft in crowded tourist areas",
+      h:"Copacabana Beach, Christ the Redeemer base",
+      m:"Leave valuables at your hotel, avoid walking with visible phones or jewellery, and stay alert." },
+    { t:"\u2018Express kidnappings\u2019 by rogue taxi drivers",
+      h:"Gale\u00e3o Airport pickup area, central taxi ranks",
+      m:"Only use licensed taxis, ride-hailing apps, or hotel-arranged transportation." },
+    { t:"Drink spiking in bars and clubs",
+      h:"Lapa nightlife zone, Ipanema bars",
+      m:"Stick with trusted groups, monitor drinks closely, and exit if you feel unsafe." },
+    { t:"Civil unrest and large-scale protests",
+      h:"Cinel\u00e2ndia, Avenida Presidente Vargas",
+      m:"Monitor local news like O Globo, and avoid protest areas during major events or strikes." }
+  ]},
+
+  // ── CHILE ──────────────────────────────────────────────────────────────────
+  { name:"Santiago", code:"SCL", country:"Chile", lat:-33.458, lng:-70.647, risks:[
+    { t:"Street robberies in downtown areas",
+      h:"Bellavista, Lastarria, Alameda near Plaza Italia",
+      m:"Keep valuables hidden, don\u2019t walk alone at night, and avoid poorly lit blocks." },
+    { t:"Pickpocketing on metro and in markets",
+      h:"Central Market, Metro Line 1 (Baquedano, Universidad de Chile)",
+      m:"Keep items in zipped bags; use body-hugging pouches; avoid rush-hour crowds." },
+    { t:"ATM and POS fraud",
+      h:"Independently operated machines near tourist corridors",
+      m:"Use ATMs in bank lobbies, cover the keypad when entering your PIN." },
+    { t:"Spiked drinks and tourist targeting in nightlife zones",
+      h:"Bellavista bars and clubs",
+      m:"Don\u2019t accept drinks from strangers; avoid bar-hopping alone; monitor personal items." },
+    { t:"Student-led protests and clashes with police",
+      h:"Plaza Italia (Plaza Dignidad), La Moneda vicinity",
+      m:"Avoid protest days; plan alternate transport routes; stay informed via La Tercera." }
+  ]},
+
+  // ── ARGENTINA ──────────────────────────────────────────────────────────────
+  { name:"Buenos Aires", code:"EZE", country:"Argentina", lat:-34.603, lng:-58.381, risks:[
+    { t:"Muggings and armed street thefts",
+      h:"San Telmo, La Boca, Retiro bus terminal",
+      m:"Avoid isolated alleys, walk in groups, and keep valuable electronics hidden." },
+    { t:"Pickpocketing and distraction theft",
+      h:"Subte (Lines C and D), Florida Street, Recoleta cemetery entrance",
+      m:"Use anti-theft bags and stay cautious around commotion or \u2018accidental\u2019 spills." },
+    { t:"Card cloning and ATM tampering",
+      h:"Independent ATMs in Microcentro",
+      m:"Use indoor machines at banks, and monitor statements for fraudulent charges." },
+    { t:"Tourist targeting in bars with drugging or \u2018friendly thief\u2019 setups",
+      h:"Palermo Soho and Hollywood nightlife venues",
+      m:"Travel in pairs or groups; monitor drinks closely; avoid overly friendly strangers offering drinks." },
+    { t:"Economic and political demonstrations", f:"u",
+      h:"Plaza de Mayo, Avenida 9 de Julio",
+      m:"Protests over President Milei\u2019s economic reform programme have been frequent since 2024 and continued into 2026; demonstrations on Avenida 9 de Julio can be large-scale with police response. Retiree and union protests occur regularly on Wednesdays near the Congress building. Check for organised marches via Clar\u00edn or La Naci\u00f3n." }
+  ]}
+
+]; // end cities
+
+// ── Build popup HTML ─────────────────────────────────────────────────────────
+function buildPopup(city) {
+  var html = '<div class="pw">'
+    + '<p class="pc">' + city.name
+    + ' <span style="font-size:12px;font-weight:400;color:#888">(' + city.code + ')</span></p>'
+    + '<p class="pco">' + city.country + '</p>';
+
+  city.risks.forEach(function(r, i) {
+    var cls   = r.f === 'u' ? 'u' : r.f === 'n' ? 'n' : '';
+    var badge = r.f === 'u' ? '<span class="badge bu">updated</span>'
+              : r.f === 'n' ? '<span class="badge bn">new</span>' : '';
+    html += '<div class="pr">'
+      + '<div class="pn ' + cls + '">' + (i + 1) + '</div>'
+      + '<div class="pt">'
+      + '<div class="ptitle">' + r.t + badge + '</div>'
+      + '<div class="ph">' + r.h + '</div>'
+      + '<div class="pm">' + r.m + '</div>'
+      + '</div></div>';
+  });
+  return html + '</div>';
+}
+
+// ── Initialise map ────────────────────────────────────────────────────────────
+var map = L.map('map', { center: [12, -75], zoom: 3, minZoom: 2 });
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 18
+}).addTo(map);
+
+var pinIcon = L.divIcon({
+  className: '',
+  html: '<div style="width:13px;height:13px;border-radius:50%;background:#185FA5;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);"></div>',
+  iconSize: [13, 13],
+  iconAnchor: [6, 6]
+});
+
+cities.forEach(function(city) {
+  L.marker([city.lat, city.lng], { icon: pinIcon })
+    .addTo(map)
+    .bindPopup(buildPopup(city), { maxWidth: 360, minWidth: 320 });
+});
+
+// ── Legend ────────────────────────────────────────────────────────────────────
+var legend = L.control({ position: 'bottomright' });
+legend.onAdd = function() {
+  var div = L.DomUtil.create('div', 'legend');
+  div.innerHTML =
+    '<div class="legend-title">Risk legend</div>'
+    + '<div class="legend-row"><span class="legend-swatch" style="background:#E6F1FB;border:1px solid #B5D4F4"></span>Unchanged</div>'
+    + '<div class="legend-row"><span class="legend-swatch" style="background:#FAECE7;border:1px solid #F0997B"></span>&#9733; Updated</div>'
+    + '<div class="legend-row"><span class="legend-swatch" style="background:#EAF3DE;border:1px solid #97C459"></span>&#9733; New (2026)</div>'
+    + '<div class="legend-note">Click any pin to view risks</div>';
+  return div;
+};
+legend.addTo(map);
+</script>
+</body>
+</html>
