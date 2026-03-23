@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europe Destination Security Risks — Updated March 2026</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; }
+  header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0dc;
+    padding: 14px 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  header h1 { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  header span { font-size: 12px; color: #888; }
+  #map { width: 100%; height: calc(100vh - 49px); }
+
+  /* Popup styles */
+  .leaflet-popup-content-wrapper {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.14) !important;
+    padding: 0 !important;
+  }
+  .leaflet-popup-content { margin: 0 !important; }
+  .leaflet-popup-tip-container { margin-top: -1px; }
+
+  .pw {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    width: 340px;
+    max-height: 480px;
+    overflow-y: auto;
+    padding: 14px 16px;
+  }
+  .pw::-webkit-scrollbar { width: 4px; }
+  .pw::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+
+  .pc { font-size: 15px; font-weight: 600; color: #1a1a1a; margin: 0 0 2px; }
+  .pco { font-size: 12px; color: #888; margin: 0 0 10px; }
+
+  .pr {
+    display: flex;
+    gap: 9px;
+    padding: 8px 0;
+    border-top: 0.5px solid #e8e8e6;
+    align-items: flex-start;
+  }
+  .pn {
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: #185FA5;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .pn.u { background: #8B0000; }
+  .pn.n { background: #3B6D11; }
+
+  .pt { font-size: 12px; color: #1a1a1a; line-height: 1.45; }
+  .ptitle { font-weight: 600; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .bu { background: #FAECE7; color: #993C1D; }
+  .bn { background: #EAF3DE; color: #3B6D11; }
+  .ph { font-size: 11px; color: #666; margin-top: 3px; }
+  .pm { font-size: 11px; color: #666; margin-top: 3px; font-style: italic; line-height: 1.45; }
+
+  /* Legend */
+  .legend {
+    background: #fff;
+    border: 0.5px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+  .legend-title { font-weight: 600; margin-bottom: 7px; color: #1a1a1a; }
+  .legend-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; color: #555; }
+  .legend-row:last-of-type { margin-bottom: 0; }
+  .legend-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; }
+  .legend-note {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 0.5px solid #e8e8e6;
+    color: #888;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Europe Destination Security Risks</h1>
+  <span>Updated March 20, 2026 &mdash; United Airlines European destinations &mdash; Click any pin to view risks</span>
+</header>
+
+<div id="map"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const cities = [
+  // ── BELGIUM ──────────────────────────────────────────────────────────────
+  { name:"Brussels", code:"BRU", country:"Belgium", lat:50.846, lng:4.352, risks:[
+    { t:"Pickpocketing in metro stations and tourist zones",
+      h:"Brussels Central Station, Grand Place, Metro Line 1 between Schuman and Gare Centrale",
+      m:"Use zipped crossbody bags, avoid distractions (e.g. people accidentally bumping into you), and stay alert when boarding or exiting crowded public transport." },
+    { t:"ATM skimming and card cloning",
+      h:"Rue Neuve shopping street, near Gare du Midi, outside convenience stores",
+      m:"Only use ATMs located inside banks or hotels; inspect the machine for skimming devices; shield your PIN entry." },
+    { t:"Protests and transport strikes", f:"u",
+      h:"Place de la Monnaie, Schuman roundabout (EU Quarter), Rue de la Loi",
+      m:"Monitor RTBF or The Brussels Times for strike updates; avoid protest zones and plan alternate transport. Demonstrations near the EU Quarter can escalate with little warning during summit periods." },
+    { t:"Taxi scams and unlicensed operators",
+      h:"Brussels Airport (BRU), Gare du Midi taxi queues",
+      m:"Use only official taxis marked with a blue-and-yellow Brussels taxi logo or use ride-hailing apps like Bolt; always check for a working meter." },
+    { t:"QR code phishing (quishing) at tourist sites and parking meters", f:"n",
+      h:"Grand Place, Manneken Pis area, street-level parking meters across the city centre",
+      m:"Do not scan QR codes from stickers placed over existing signage; type restaurant or parking URLs directly into your browser or use official city parking apps. Quishing incidents targeting tourists have been reported across Belgium since late 2025." }
+  ]},
+
+  // ── FRANCE ───────────────────────────────────────────────────────────────
+  { name:"Nice", code:"NCE", country:"France", lat:43.710, lng:7.262, risks:[
+    { t:"Pickpocketing on trams and Promenade des Anglais",
+      h:"Tram Line 1 (especially at Jean M\u00e9decin and Mass\u00e9na stops), Promenade des Anglais",
+      m:"Use bags with anti-theft zippers, stay alert when boarding or exiting transit, and avoid using phones near tram doors." },
+    { t:"Fake petitions and clipboard scams",
+      h:"Place Mass\u00e9na, entrance to Old Town (Vieux Nice)",
+      m:"Ignore groups of young people approaching with clipboards; keep your distance and secure belongings during any distraction attempts." },
+    { t:"ATM skimming near tourist zones",
+      h:"Avenue Jean M\u00e9decin and near Nice-Ville train station",
+      m:"Only use ATMs inside banks or shopping centres; inspect the machine for tampering, and shield your PIN entry." },
+    { t:"Protests and strikes disrupting transit", f:"u",
+      h:"Place Garibaldi, Nice-Ville station, City Hall",
+      m:"Monitor local media (e.g. France 24). French air traffic controller unions have filed strike notices for spring 2026 that could affect all flights over French airspace; check flight status 48 hours before departure and purchase refundable fares or travel insurance." },
+    { t:"Unlicensed taxi scams targeting airport arrivals",
+      h:"Nice C\u00f4te d\u2019Azur Airport Arrivals Hall",
+      m:"Use designated taxi ranks, confirm that the meter is running, or prebook rides via official apps like Uber or Bolt." }
+  ]},
+
+  { name:"Paris", code:"CDG", country:"France", lat:48.856, lng:2.352, risks:[
+    { t:"Pickpocketing in metro and at landmarks", f:"u",
+      h:"Metro lines 1 & 4, Eiffel Tower, Sacr\u00e9-C\u0153ur, and Champs-\u00c9lys\u00e9es",
+      m:"Carry a bag in front, avoid distractions (e.g. dropped items), and use theft-proof zippers. Paris has been ranked the global pickpocket capital in 2025\u20132026 research. Metro Line 4 between Ch\u00e2teau Rouge and Ch\u00e2telet is closed for modernisation through mid-2026; remain extra vigilant on busier substitute routes." },
+    { t:"Gold ring and fake petition scams",
+      h:"Pont des Arts, Louvre entrance, Notre-Dame area",
+      m:"Decline any found \u2018gold rings\u2019 or unexpected petitioners; walk away immediately." },
+    { t:"Overcharging or rigged meters by rogue taxis",
+      h:"CDG Airport Arrivals, Gare du Nord",
+      m:"Use licensed taxis from designated stands or apps like G7 and Free Now." },
+    { t:"Protests and flash strikes disrupting movement", f:"u",
+      h:"Place de la R\u00e9publique, Bastille, and Gare Montparnasse",
+      m:"Avoid protest areas and monitor traffic advisories. French ATC unions have active strike notices for spring 2026; purchase refundable tickets or confirm airline rebooking policies. Paris Gare de Lyon is fully closed 30 April\u20133 May 2026, affecting TGV services to Nice and the South of France." },
+    { t:"Phone snatching and grab-and-run theft", f:"n",
+      h:"Caf\u00e9 terraces near the Eiffel Tower, Champs-\u00c9lys\u00e9es outdoor seating, Seine riverbanks",
+      m:"Keep your phone off tables at outdoor restaurants; use a wrist strap when photographing at crowded landmarks. Motorcycle and bicycle-based phone snatching has increased sharply since 2025 across Paris tourist zones." }
+  ]},
+
+  // ── GERMANY ──────────────────────────────────────────────────────────────
+  { name:"Berlin", code:"BER", country:"Germany", lat:52.520, lng:13.405, risks:[
+    { t:"Pickpocketing on public transit",
+      h:"U-Bahn and S-Bahn lines at Alexanderplatz, Zoologischer Garten",
+      m:"Hold your bag in front, avoid standing near exits, and be cautious when doors open." },
+    { t:"Drink spiking in bars and clubs",
+      h:"Kreuzberg, Friedrichshain (RAW Gel\u00e4nde), and Neuk\u00f6lln nightlife",
+      m:"Never leave drinks unattended; go out with trusted companions." },
+    { t:"Fake police ID scams",
+      h:"Brandenburg Gate, Tiergarten Park paths",
+      m:"Ask for identification and call the tourist police line if suspicious." },
+    { t:"Demonstrations with potential clashes",
+      h:"Unter den Linden, Brandenburg Gate, Rosa-Luxemburg-Platz",
+      m:"Check local news or the Berlin Police X account (@polizeiberlin), and avoid these zones during known protest dates." },
+    { t:"ATM manipulation and cash traps",
+      h:"Around Hackescher Markt and touristy U-Bahn exits",
+      m:"Use bank ATMs; avoid machines with loose components or overlays." }
+  ]},
+
+  { name:"Frankfurt", code:"FRA", country:"Germany", lat:50.110, lng:8.682, risks:[
+    { t:"Theft in train stations and airport transit", f:"u",
+      h:"Frankfurt Hauptbahnhof, regional train platforms at FRA Airport",
+      m:"Keep belongings in sight when boarding trains; avoid setting bags down unattended. Recurring transport strikes have made Frankfurt Hauptbahnhof more chaotic in 2026 \u2014 pickpockets exploit congestion during strike-day surges. Monitor Deutsche Bahn (bahn.de) and airline apps for real-time disruptions." },
+    { t:"Aggressive panhandling and distraction theft",
+      h:"Zeil shopping street, Konstablerwache",
+      m:"Avoid engaging, especially with people approaching in groups or with children." },
+    { t:"Organised gang thefts in hotel lobbies",
+      h:"Hotels near Messe Frankfurt and airport hotels",
+      m:"Lock luggage, don\u2019t leave bags unattended even momentarily, and report suspicious loiterers." },
+    { t:"Counterfeit ticket and donation scams",
+      h:"R\u00f6merberg and museums along the River Main",
+      m:"Buy event or museum tickets only from official counters or online portals." },
+    { t:"Spontaneous protests impacting city centre", f:"u",
+      h:"Willy-Brandt-Platz, ECB building area",
+      m:"Check protest alerts on city websites and avoid large flagged gatherings. Germany has experienced significant transport sector strikes in 2025\u20132026 affecting Frankfurt Airport and local transit; build in buffer time between connections and confirm flights 48 hours ahead." }
+  ]},
+
+  { name:"Munich", code:"MUC", country:"Germany", lat:48.137, lng:11.575, risks:[
+    { t:"Pickpocketing during events and beer gardens",
+      h:"Marienplatz, Englischer Garten, Oktoberfest grounds",
+      m:"Avoid overloading pockets, keep bags closed and in sight, especially when seated." },
+    { t:"Taxi overcharging after Oktoberfest or events",
+      h:"Theresienwiese, Munich Central Station",
+      m:"Pre-arrange transport or use app-based rides like Free Now with pricing transparency." },
+    { t:"Fake charity workers near tourist hubs",
+      h:"Viktualienmarkt, near Frauenkirche",
+      m:"Decline all unsolicited \u2018donation\u2019 approaches; legitimate workers have permits." },
+    { t:"Climate and labour protests near political buildings", f:"u",
+      h:"Odeonsplatz, Max-Joseph-Platz",
+      m:"Avoid protest routes; these may cause traffic diversions and police cordons. Germany\u2019s elevated strike activity in 2026 means airport and transit disruptions can occur with little notice at Munich Airport (MUC); verify flight status the day before departure." },
+    { t:"ATM fraud targeting festival attendees",
+      h:"Machines near Theresienwiese and G\u00e4rtnerplatz",
+      m:"Use indoor ATMs; check for loose card readers or false keypads." }
+  ]},
+
+  // ── GREECE ───────────────────────────────────────────────────────────────
+  { name:"Athens", code:"ATH", country:"Greece", lat:37.979, lng:23.727, risks:[
+    { t:"Pickpocketing in metro and tourist areas",
+      h:"Monastiraki, Omonia Square, and Acropolis metro",
+      m:"Keep items zipped and in front, especially in station queues and on escalators." },
+    { t:"Anarchist protests and clashes with police",
+      h:"Exarchia neighbourhood, outside Parliament at Syntagma Square",
+      m:"Steer clear of protests; clashes sometimes include tear gas and detentions." },
+    { t:"Taxi fare gouging and route scams",
+      h:"Athens International Airport, Piraeus Port",
+      m:"Use official taxis, demand meter usage, or pre-book via apps like Beat." },
+    { t:"Street scammers and beggars",
+      h:"Ermou Street, tourist caf\u00e9s in Plaka",
+      m:"Ignore persistent beggars; be alert to anyone crowding your personal space." },
+    { t:"Skimming at freestanding ATMs",
+      h:"Around Syntagma and near Piraeus ferry terminals",
+      m:"Choose machines inside banks; avoid isolated ATMs." }
+  ]},
+
+  // ── ITALY ─────────────────────────────────────────────────────────────────
+  { name:"Milan", code:"MXP", country:"Italy", lat:45.465, lng:9.188, risks:[
+    { t:"Pickpocketing in metro and Duomo area", f:"u",
+      h:"Milan Metro Line 1, Piazza del Duomo",
+      m:"Use money belts, watch for distractions, avoid taking out phones in crowded spaces. Italy records the highest pickpocketing-per-visitor rate in Europe; Milan has the highest citywide crime rate among major Italian cities (approximately 70 crimes per 1,000 residents in 2024 data)." },
+    { t:"Theft in Central Station luggage zones",
+      h:"Milano Centrale platforms and bag drop areas",
+      m:"Keep bags locked and under watch; avoid placing valuables in exterior pockets." },
+    { t:"Taxi fraud and airport shuttle schemes",
+      h:"Malpensa Airport Arrivals",
+      m:"Use only white licensed taxis or certified shuttle counters." },
+    { t:"Protests affecting fashion and design events", f:"u",
+      h:"Via Tortona and Piazza Affari during fashion week",
+      m:"Allow for delays; avoid venues flagged for protest presence. Anti-tourism and housing protests have expanded in Milan since mid-2025; during major events, confrontations between protesters and visitors can occur near luxury shopping districts." },
+    { t:"Phone snatching by motorcycle thieves", f:"n",
+      h:"Piazza del Duomo outdoor caf\u00e9s, Navigli canal district, busy intersections citywide",
+      m:"Keep phones off caf\u00e9 tables and secured in a pocket or bag with a zip; be especially cautious when taking photos near roadsides. Motorbike-based phone and bag theft has increased markedly in Milan since 2025." }
+  ]},
+
+  { name:"Naples", code:"NAP", country:"Italy", lat:40.851, lng:14.268, risks:[
+    { t:"Street theft and pickpocketing",
+      h:"Spaccanapoli, Via Toledo, Central Station (Piazza Garibaldi)",
+      m:"Avoid wearing expensive jewellery, use anti-theft bags, and walk with purpose through crowded areas." },
+    { t:"Bag snatching by scooter thieves", f:"u",
+      h:"Quartieri Spagnoli, Corso Umberto I",
+      m:"Keep bags on your shoulder opposite the street, stay away from road edges, and be especially cautious after dark. Tourists have reported increasing aggression when resisting theft attempts since 2025." },
+    { t:"Tourist overcharging by informal vendors",
+      h:"Castel dell\u2019Ovo, Mergellina waterfront",
+      m:"Confirm prices upfront at restaurants and shops; avoid street-side stalls offering unsolicited \u2018deals\u2019." },
+    { t:"Presence of petty organised crime",
+      h:"Forcella and Sanit\u00e0 districts",
+      m:"Avoid wandering off main streets or into unfamiliar neighbourhoods; use official taxis or hotel-arranged transport." },
+    { t:"Anti-tourism protests and visitor confrontations", f:"n",
+      h:"Waterfront promenade, major piazzas in the historic centre",
+      m:"Anti-tourism demonstrations have been held in Naples as part of a broader Southern European backlash since 2025. Remain aware of large gatherings and do not photograph or engage with protesters. Follow local news (e.g. Il Mattino) for planned protest dates." }
+  ]},
+
+  { name:"Palermo", code:"PMO", country:"Italy", lat:38.116, lng:13.361, risks:[
+    { t:"Pickpocketing in historical markets",
+      h:"Ballar\u00f2 and Vucciria markets",
+      m:"Keep valuables in front-facing bags, avoid large crowds with open zippers, and stay alert to bumping or staged distractions." },
+    { t:"Rental car break-ins",
+      h:"Mount Pellegrino, Monreale overlook parking areas",
+      m:"Never leave belongings in plain sight; park in monitored or guarded lots where possible." },
+    { t:"Street scams targeting tourists",
+      h:"Piazza Pretoria and Quattro Canti",
+      m:"Politely decline any unsolicited help or trinkets; always clarify pricing before accepting service or merchandise." },
+    { t:"Scooter-based theft near tourist zones",
+      h:"Teatro Massimo surroundings, Via Maqueda",
+      m:"Hold bags securely on your far shoulder from traffic; avoid walking too close to the street." },
+    { t:"Political demonstrations with large police response", f:"u",
+      h:"Piazza Verdi and Piazza Indipendenza",
+      m:"Monitor local updates; avoid mass gatherings near government offices. Anti-tourism protests in Palermo (part of the broader Southern European movement since mid-2025) may involve direct interactions with tourists; stay calm, do not photograph protesters, and exit affected areas promptly." }
+  ]},
+
+  { name:"Rome", code:"FCO", country:"Italy", lat:41.902, lng:12.496, risks:[
+    { t:"Pickpocketing in tourist areas", f:"u",
+      h:"Termini Station, Trevi Fountain, Vatican area",
+      m:"Avoid carrying valuables in backpacks; keep hands on bags in metro lines A & B. Rome recorded approximately 33,000 pickpocketing incidents in 2024 (up ~68% vs. 2019); crime against tourists is up roughly 30% year-on-year. Organised crews use children and staged disputes as diversions." },
+    { t:"Fake police officers demanding wallet inspections", f:"n",
+      h:"Trevi Fountain, Colosseum area, Spanish Steps",
+      m:"Plainclothes individuals posing as police and demanding to inspect wallets for \u2018counterfeit checks\u2019 have been increasingly reported since 2025. Real Italian police (Polizia di Stato) carry clearly marked ID; request badge number and call the tourist police line (06 468 61) if unsure." },
+    { t:"Unlicensed taxi scams",
+      h:"FCO Airport Arrivals, Termini taxi stands",
+      m:"Only use taxis at official queues; verify the city-issued medallion and use flat-fare options to/from the airport." },
+    { t:"Frequent strikes and protests disrupting transit", f:"u",
+      h:"Piazza Venezia, Via dei Fori Imperiali",
+      m:"Allow extra travel time; follow @InfoAtacRoma for metro/bus updates. Italy\u2019s ATC was struck on 7 March 2026, causing over 1,000 flight cancellations; further ATC and transport worker actions are expected through 2026 \u2014 check flight status 48 hours before departure." },
+    { t:"Bracelet and petition scams",
+      h:"Spanish Steps, Colosseum",
+      m:"Don\u2019t accept unsolicited items or sign petitions; they are often distractions for theft. Warning signs have been installed near the Spanish Steps, yet incidents continue." }
+  ]},
+
+  { name:"Venice", code:"VCE", country:"Italy", lat:45.438, lng:12.335, risks:[
+    { t:"Pickpocketing on vaporettos and bridges",
+      h:"Rialto Bridge, Vaporetto Line 1",
+      m:"Use secure zippered bags, keep items close during transit, and avoid being distracted while crossing bridges." },
+    { t:"Restaurant menu swapping and bill padding",
+      h:"Near Piazza San Marco and waterfront trattorias",
+      m:"Request printed menus with prices before ordering, check your bill carefully, and refuse unsolicited extras." },
+    { t:"Luggage snatching during ferry boarding",
+      h:"Santa Lucia Station boat docks",
+      m:"Keep hand on your bags at all times, especially when navigating crowds at docking ramps." },
+    { t:"Scams by unofficial gondoliers or water taxis",
+      h:"Grand Canal and San Marco basin",
+      m:"Agree on a price before departure; use registered gondoliers or taxis with licence numbers." },
+    { t:"Anti-tourism protests and access disruptions", f:"n",
+      h:"Rialto Bridge area, Piazza San Marco, ferry terminals",
+      m:"Venice\u2019s anti-mass-tourism movement has escalated since 2025; protests may block access to key areas. Monitor Comune di Venezia (comune.venezia.it) and vaporetto operator ACTV for service disruptions tied to protests or strikes." }
+  ]},
+
+  // ── IRELAND ───────────────────────────────────────────────────────────────
+  { name:"Dublin", code:"DUB", country:"Ireland", lat:53.349, lng:-6.260, risks:[
+    { t:"Bag theft and street pickpocketing",
+      h:"Temple Bar, Grafton Street, and Dublin Bus stops",
+      m:"Use crossbody bags, avoid flashing phones or wallets in public, and stay alert in pubs." },
+    { t:"Drink spiking in pubs and clubs",
+      h:"Harcourt Street, Camden Street nightlife",
+      m:"Watch your drink; never accept open drinks from strangers; travel with friends." },
+    { t:"Overcharging by rogue taxis",
+      h:"Dublin Airport Arrivals, Heuston Station",
+      m:"Use pre-booked taxis via Free Now; all legal taxis must use a visible fare meter." },
+    { t:"Theft from parked rental cars",
+      h:"Phoenix Park, Howth Cliff trails",
+      m:"Take valuables with you; park in lots with security patrols where available." },
+    { t:"Protests disrupting traffic and access", f:"u",
+      h:"O\u2019Connell Street, Leinster House",
+      m:"Avoid demonstration areas, especially on weekends; check Dublin City Council updates for road closures. The frequency of large demonstrations in central Dublin has increased since 2025; monitor local news on arrival." }
+  ]},
+
+  { name:"Shannon", code:"SNN", country:"Ireland", lat:52.702, lng:-8.925, risks:[
+    { t:"Card fraud and ATM skimming",
+      h:"Shannon Town Centre ATMs, nearby petrol stations",
+      m:"Use machines inside banks; shield your PIN and check for suspicious attachments." },
+    { t:"Vehicle break-ins at tourist stops",
+      h:"Cliffs of Moher parking lots, Bunratty Castle lots",
+      m:"Don\u2019t leave belongings in the car, even hidden; opt for guarded lots where available." },
+    { t:"Luggage theft from tour buses",
+      h:"Shannon Airport drop zones, hotel coach bays",
+      m:"Keep small valuables on you; label luggage clearly and lock outer zippers." },
+    { t:"Protests blocking access to terminals",
+      h:"Shannon Airport perimeter roads",
+      m:"Monitor local news during major global events; arrive early to account for delays." },
+    { t:"Unlicensed tour operators selling day trips",
+      h:"Near airport info kiosks and highway pit stops",
+      m:"Book tours in advance from verified providers; confirm licensing before paying." }
+  ]},
+
+  // ── NETHERLANDS ───────────────────────────────────────────────────────────
+  { name:"Amsterdam", code:"AMS", country:"Netherlands", lat:52.377, lng:4.908, risks:[
+    { t:"Pickpocketing in red-light and nightlife areas",
+      h:"De Wallen (Red Light District), Leidseplein, Central Station trams",
+      m:"Keep phones and wallets secured and avoid distractions like street performers or sudden arguments staged by accomplices." },
+    { t:"Drink spiking and drug scams in clubs",
+      h:"Rembrandtplein, Leidseplein nightclubs",
+      m:"Never accept unsolicited drinks or drugs; stay with trusted companions and watch your glass." },
+    { t:"Bicycle theft (even locked)",
+      h:"Outside Centraal Station, Museumplein, near canal bridges",
+      m:"Use two high-quality locks (U-lock + chain), secure both frame and wheel, and avoid leaving bikes out overnight." },
+    { t:"Unlicensed taxi scams",
+      h:"Outside AMS airport, tourist-heavy zones near Dam Square",
+      m:"Only take taxis from official stands, or use apps like Bolt or Uber which offer upfront pricing and driver profiles." },
+    { t:"Aviation strike disruptions at Schiphol", f:"n",
+      h:"Amsterdam Schiphol Airport, all terminals",
+      m:"KLM and Schiphol ground staff have conducted strikes resulting in mass flight cancellations since late 2025; check airline apps and the Schiphol website for real-time status before travelling to the airport. Allow extra check-in time during periods of industrial action." }
+  ]},
+
+  // ── PORTUGAL ──────────────────────────────────────────────────────────────
+  { name:"Faro", code:"FAO", country:"Portugal", lat:37.020, lng:-7.935, risks:[
+    { t:"Pickpocketing in old town and marina",
+      h:"Arco da Vila, Doca de Faro",
+      m:"Stay alert in narrow pedestrian streets, use zipped bags, and don\u2019t leave belongings unattended at caf\u00e9s." },
+    { t:"Rental scams with jet skis and boats",
+      h:"Faro Marina",
+      m:"Use officially licensed rental companies; check equipment condition before paying, and request written contracts." },
+    { t:"Break-ins at rental accommodations",
+      h:"Tourist flats around Cidade Velha",
+      m:"Use accommodations with safes, lock all doors/windows when out, and avoid sharing location tags online." },
+    { t:"GPS-jamming car theft attempts",
+      h:"Roadside viewpoints near Ria Formosa",
+      m:"Avoid remote stops unless secure; keep valuables hidden; verify that the car is locked manually." },
+    { t:"ATM card cloning near beaches",
+      h:"ATMs near Praia de Faro",
+      m:"Use ATMs attached to bank branches; shield your PIN and look for tampering before use." }
+  ]},
+
+  { name:"Lisbon", code:"LIS", country:"Portugal", lat:38.717, lng:-9.142, risks:[
+    { t:"Pickpocketing on Tram 28 and in Alfama",
+      h:"Tram 28, Rossio Square, and Alfama\u2019s winding streets",
+      m:"Avoid crowded trams during peak hours; use anti-theft bags and limit public phone use." },
+    { t:"Restaurant menu and bill scams",
+      h:"Rua Augusta and Pra\u00e7a do Com\u00e9rcio",
+      m:"Always ask to see the menu before ordering, clarify charges for appetisers and bread, and double-check your bill." },
+    { t:"Taxi overcharging at airport and cruise terminal",
+      h:"Lisbon Airport Arrivals, Cais do Sodr\u00e9 ferry terminal",
+      m:"Use Bolt or Free Now apps for fare transparency; avoid cash-only drivers." },
+    { t:"ATM skimming in Baixa-Chiado",
+      h:"Rua da Prata, Elevador de Santa Justa vicinity",
+      m:"Stick to ATMs inside banks; check machines for overlays or loose card slots." },
+    { t:"Strikes and anti-tourism demonstrations", f:"u",
+      h:"Avenida da Liberdade, Parliament (S\u00e3o Bento Palace)",
+      m:"Follow local news (e.g. P\u00fablico), avoid protest zones, and build in buffer time when travelling by metro or bus. Anti-tourism protests have occurred in Lisbon since mid-2025; demonstrations can be confrontational and have disrupted access to popular tourist zones." }
+  ]},
+
+  { name:"Madeira", code:"FNC", country:"Portugal", lat:32.650, lng:-16.910, risks:[
+    { t:"Brake failures and car rental safety issues",
+      h:"Mountain roads to Pico do Ari\u00e3o and Cabo Gir\u00e3o",
+      m:"Choose reputable rental agencies, inspect brakes before long drives, and avoid risky descents at night." },
+    { t:"Luggage theft in Funchal bus stations",
+      h:"Funchal intercity terminal and Mercado dos Lavradores",
+      m:"Keep bags on your lap or in sight, and use secure compartments when storing on buses." },
+    { t:"Overpriced or unsafe boat excursions",
+      h:"Funchal Marina",
+      m:"Only book licensed tours; avoid cash-only operators without clear signage or refund policies." },
+    { t:"Pickpocketing during cruise disembarkations",
+      h:"Port of Funchal, Avenida Arriaga",
+      m:"Leave non-essentials onboard, and keep your wallet hidden in busy shopping zones." },
+    { t:"Tourist misdirection scams",
+      h:"Funchal promenade and hotel district",
+      m:"Avoid following unsolicited \u2018helpers\u2019 or guides on foot; ask for assistance from official info kiosks." }
+  ]},
+
+  { name:"Ponta Delgada", code:"PDL", country:"Portugal", lat:37.739, lng:-25.669, risks:[
+    { t:"Tourist car break-ins at natural landmarks",
+      h:"Lagoa do Fogo, Sete Cidades parking lots",
+      m:"Never leave bags visible in the car; park in areas with other vehicles or near staffed locations." },
+    { t:"Unlicensed tour operators targeting cruise visitors",
+      h:"Port of Ponta Delgada",
+      m:"Book excursions through verified apps or cruise-endorsed companies; avoid same-day cash vendors." },
+    { t:"ATM fraud and card skimming",
+      h:"Machines near Avenida Infante Dom Henrique",
+      m:"Use ATMs inside reputable bank branches; check for tampering before inserting cards." },
+    { t:"Pickpocketing during festivals and parades",
+      h:"City centre during Holy Ghost Festivals and Semana do Mar",
+      m:"Avoid bulky wallets, split valuables between pockets, and stay vigilant when in standing crowds." },
+    { t:"Public transit disruptions during union strikes",
+      h:"City bus terminals and ferry routes",
+      m:"Confirm inter-island ferries and buses the day before; consider rental cars as a fallback." }
+  ]},
+
+  { name:"Porto", code:"OPO", country:"Portugal", lat:41.157, lng:-8.629, risks:[
+    { t:"Pickpocketing in metro and Ribeira district",
+      h:"S\u00e3o Bento Station, Bolh\u00e3o Market, Ribeira riverside promenade",
+      m:"Use zipped crossbody bags, avoid flashing your phone near station doors, and keep wallets out of back pockets." },
+    { t:"ATM tampering near tourist areas",
+      h:"Rua de Santa Catarina, Aliados Avenue",
+      m:"Prefer ATMs located inside banks or malls; check for loose components before use and shield your PIN." },
+    { t:"Taxi fare inflation from airport",
+      h:"Porto Airport (OPO) arrivals, Campanh\u00e3 station",
+      m:"Request a receipt before departing, use Bolt or Free Now, and check that the meter is turned on at departure." },
+    { t:"Street petitions or friendship bracelet scams",
+      h:"Dom Lu\u00eds I Bridge, Cl\u00e9rigos Tower plaza",
+      m:"Politely decline engagement; walk away if approached by clipboard-holders or bracelet sellers." },
+    { t:"Strikes and anti-tourism protests", f:"u",
+      h:"S\u00e3o Bento Station, Trindade Metro, Ribeira riverside",
+      m:"Monitor local transit updates via RTP or P\u00fablico and allow extra travel time during disruptions. Anti-tourism protests have occurred in Porto since 2025; follow local news and avoid large gatherings near the riverside." }
+  ]},
+
+  // ── SPAIN ─────────────────────────────────────────────────────────────────
+  { name:"Barcelona", code:"BCN", country:"Spain", lat:41.385, lng:2.173, risks:[
+    { t:"Pickpocketing on metro and in tourist spots", f:"u",
+      h:"Las Ramblas, Liceu metro, Sagrada Fam\u00edlia",
+      m:"Keep valuables in a zipped internal pouch; avoid distractions or interactions with street performers or vendors. Barcelona pickpocketing incidents rose 25% in 2024 vs. 2023; organised gangs using children as decoys are documented by police." },
+    { t:"Fake police or ID scam",
+      h:"El Raval and Pla\u00e7a Catalunya",
+      m:"Never hand over documents unless at a marked police station; request uniformed officer ID and badge number." },
+    { t:"Drink spiking in clubs",
+      h:"Barceloneta beach bars, Gothic Quarter nightclubs",
+      m:"Never leave drinks unattended; travel with a group and only visit known venues." },
+    { t:"Catalan independence and anti-tourism protests", f:"u",
+      h:"Pla\u00e7a Sant Jaume, Via Laietana, Las Ramblas",
+      m:"Avoid large gatherings; monitor local news (e.g. La Vanguardia). Anti-tourism protests have become more confrontational since 2025, with demonstrators using water guns, smoke bombs, and in some cases physically blocking tour buses. Do not photograph protesters; exit affected areas quickly if demonstrations form." },
+    { t:"Overcharging or rerouting taxi scams",
+      h:"El Prat Airport, cruise terminals",
+      m:"Use authorised taxis or the Free Now app; confirm route and meter use before departure." }
+  ]},
+
+  { name:"Bilbao", code:"BIO", country:"Spain", lat:43.263, lng:-2.935, risks:[
+    { t:"Pickpocketing in Old Town (Casco Viejo)",
+      h:"Plaza Nueva, Arriaga Theatre",
+      m:"Keep backpacks zipped and in front in busy alleys; avoid carrying all valuables at once." },
+    { t:"ATM skimming in shopping areas",
+      h:"Gran V\u00eda and Indautxu District",
+      m:"Use ATMs inside banks, check for card slot tampering, and hide keypad during entry." },
+    { t:"Basque political protests and demonstrations",
+      h:"City Hall (Ayuntamiento), Moy\u00faa Square",
+      m:"Avoid areas with banners or large gatherings; avoid photographing protests." },
+    { t:"Street donation scams",
+      h:"Near Guggenheim Museum and Zubizuri bridge",
+      m:"Politely decline charity requests unless from licensed booths or city-sanctioned organisations." },
+    { t:"Taxi fraud targeting tourists",
+      h:"Bilbao Airport (BIO), central bus terminal",
+      m:"Confirm estimated fare before departing; avoid unmarked taxis and insist on a metered ride." }
+  ]},
+
+  { name:"M\u00e1laga", code:"AGP", country:"Spain", lat:36.721, lng:-4.421, risks:[
+    { t:"Pickpocketing in beachfront and city centre",
+      h:"Calle Larios, La Malagueta beach",
+      m:"Don\u2019t leave bags unattended at restaurants or beaches; secure bags while walking crowded promenades." },
+    { t:"\u2018Found ring\u2019 or distraction scams",
+      h:"Near Alcazaba, Cathedral square",
+      m:"Walk away from unsolicited interactions; do not pick up dropped objects handed to you." },
+    { t:"ATM skimming near hotels and shopping centres",
+      h:"El Corte Ingl\u00e9s, Muelle Uno",
+      m:"Inspect machines for tampering; use bank branch ATMs when possible; cover PIN entry." },
+    { t:"Drink spiking in tourist nightlife zones",
+      h:"Plaza de la Merced, Soho bars",
+      m:"Monitor your drink; avoid accepting drinks from strangers and stick to venues recommended by your hotel." },
+    { t:"Taxi meter tampering from airport",
+      h:"M\u00e1laga\u2013Costa del Sol Airport (AGP)",
+      m:"Use authorised cabs at the designated stand, check for a running meter, or book via local ride apps." }
+  ]},
+
+  { name:"Madrid", code:"MAD", country:"Spain", lat:40.416, lng:-3.703, risks:[
+    { t:"Pickpocketing in metro and major plazas",
+      h:"Puerta del Sol, Gran V\u00eda, Atocha Station",
+      m:"Carry valuables in inner pockets; stay alert when boarding crowded subway lines." },
+    { t:"Fake charity or donation scams",
+      h:"Plaza Mayor, Retiro Park",
+      m:"Avoid engaging with clipboard carriers or bracelet sellers; walk away if approached." },
+    { t:"Large political demonstrations", f:"u",
+      h:"Plaza de Cibeles, Congreso de los Diputados",
+      m:"Steer clear of protest zones, especially on weekends or during national holidays. Anti-tourism sentiment is growing across Spain, which remains under a U.S. State Department Level 2 advisory citing terrorism and civil unrest risks." },
+    { t:"Taxi price manipulation",
+      h:"Madrid\u2013Barajas Airport (MAD), Chamart\u00edn Station",
+      m:"Pre-book a flat-rate cab or use Cabify/Uber; check licence plate against your app confirmation." },
+    { t:"Theft at caf\u00e9 patios and terraces",
+      h:"Calle de las Huertas, Malasa\u00f1a",
+      m:"Never hang bags on chair backs; loop your leg through a strap or keep bags in your lap." }
+  ]},
+
+  { name:"Palma de Mallorca", code:"PMI", country:"Spain", lat:39.571, lng:2.646, risks:[
+    { t:"Pickpocketing in beach and marina zones",
+      h:"Playa de Palma, Passeig des Born, and Marina Port",
+      m:"Avoid carrying wallets in back pockets; use anti-theft bags and stay alert during street performances or crowds." },
+    { t:"ATM card skimming near beach resorts",
+      h:"Magaluf, El Arenal tourist centres",
+      m:"Use bank branch ATMs, not stand-alone machines; shield your PIN and inspect the card slot." },
+    { t:"Drink spiking in nightlife venues",
+      h:"Magaluf strip, Santa Catalina bars",
+      m:"Keep your drink with you, watch for behaviour changes in companions, and avoid accepting drinks from strangers." },
+    { t:"Overpriced taxi rides for tourists",
+      h:"PMI Airport, ferry terminals, and late-night pickup zones",
+      m:"Use official cabs at designated ranks; confirm the meter is on or use ride-share apps where permitted." },
+    { t:"Protests over mass tourism and housing", f:"u",
+      h:"Pla\u00e7a d\u2019Espanya, Palma City Hall, cruise ship terminals",
+      m:"Avoid protest zones, especially in summer; monitor local news and adjust travel routes as needed. Palma saw one of the largest anti-tourism demonstrations in Europe in 2025; protesters have used flares and smoke bombs. The Balearic regional government is considering further tourist access restrictions in 2026." }
+  ]},
+
+  // ── SWEDEN ────────────────────────────────────────────────────────────────
+  { name:"Stockholm", code:"ARN", country:"Sweden", lat:59.333, lng:18.065, risks:[
+    { t:"Pickpocketing in shopping streets and public transit",
+      h:"Drottninggatan, T-Centralen metro station",
+      m:"Keep wallets in front pockets, use zipped bags, and avoid displaying phones at transit hubs." },
+    { t:"ATM skimming in tourist areas",
+      h:"Near Gamla Stan and Sergels Torg",
+      m:"Use ATMs inside banks or malls; inspect machines and hide your PIN entry." },
+    { t:"Harbour scams and ticket frauds",
+      h:"Djurg\u00e5rden ferry terminals",
+      m:"Buy tickets only through official vendors or digital kiosks; avoid cash purchases from street sellers." },
+    { t:"Petition scams posing as donations",
+      h:"Near Royal Palace, Vasa Museum entrance",
+      m:"Politely decline clipboard offers or photo solicitations, especially near long tourist queues." },
+    { t:"Public protests tied to climate or international events",
+      h:"Kungstr\u00e4dg\u00e5rden, Parliament (Riksdag) square",
+      m:"Avoid demonstration zones; monitor Swedish media (e.g. SVT) for updates and reroute accordingly." }
+  ]},
+
+  // ── SWITZERLAND ───────────────────────────────────────────────────────────
+  { name:"Geneva", code:"GVA", country:"Switzerland", lat:46.204, lng:6.143, risks:[
+    { t:"Pickpocketing in train stations and Old Town",
+      h:"Cornavin Station, Rue du Rh\u00f4ne",
+      m:"Avoid backpacks in crowded areas, carry limited valuables, and be wary near ATMs and escalators." },
+    { t:"ATM fraud in business hotel zones",
+      h:"Paquis and Rue de Lausanne",
+      m:"Use indoor bank ATMs, watch for skimmers, and avoid assistance offers from strangers." },
+    { t:"Protests targeting multilateral institutions", f:"u",
+      h:"WTO, UN headquarters, Place des Nations",
+      m:"Avoid large gatherings or marches, especially during high-level summits; monitor city advisories. Protests near international institutions have become more frequent since 2025 in connection with global geopolitical tensions; Swiss authorities respond with large police deployments that can disrupt local transit." },
+    { t:"Overcharging by rogue taxis",
+      h:"Geneva Airport and Cornavin station",
+      m:"Confirm meter use or pre-book via Swiss ride apps like TaxiPhone or Uber." },
+    { t:"QR code and digital payment fraud", f:"n",
+      h:"Parking meters in tourist areas, Cornavin station surroundings, Old Town restaurant tables",
+      m:"Switzerland has been identified as an active target for quishing campaigns. Inspect any QR code for signs of a sticker overlay; use official SBB (Swiss Federal Railways) and city parking apps rather than codes on meters; report suspicious codes to venue staff." }
+  ]},
+
+  { name:"Zurich", code:"ZRH", country:"Switzerland", lat:47.376, lng:8.541, risks:[
+    { t:"Pickpocketing in Bahnhofstrasse and train hubs",
+      h:"Zurich HB (main station), Paradeplatz",
+      m:"Keep your wallet in front pockets, avoid phone use when boarding trams, and stay aware near cash machines." },
+    { t:"Luggage theft at airport lounges",
+      h:"Zurich Airport (ZRH), Glattzentrum",
+      m:"Keep bags in your line of sight, lock zippers, and don\u2019t leave devices charging unattended." },
+    { t:"Credit card skimming at kiosks",
+      h:"Main shopping strips, vending machines in tourist zones",
+      m:"Prefer contactless payment or secure card readers; report suspicious card machines to nearby staff." },
+    { t:"Drink theft or spiking in Langstrasse bars",
+      h:"Langstrasse nightlife area",
+      m:"Never leave drinks unattended; stay with companions and avoid accepting unsealed bottles." },
+    { t:"\u2018Accidental bump\u2019 distraction thefts",
+      h:"Bahnhofplatz, Christmas markets",
+      m:"Be cautious with those who approach unexpectedly; secure bags and phones in crowded spaces." }
+  ]},
+
+  // ── UNITED KINGDOM ────────────────────────────────────────────────────────
+  { name:"London", code:"LHR", country:"United Kingdom", lat:51.509, lng:-0.118, risks:[
+    { t:"Pickpocketing on the Tube and major attractions",
+      h:"Oxford Street, Leicester Square, Piccadilly Line",
+      m:"Avoid keeping phones or wallets in coat pockets; use crossbody bags with interior compartments." },
+    { t:"Card skimming and contactless fraud", f:"u",
+      h:"ATM kiosks near tourist hotels and stations",
+      m:"Use ATMs inside bank branches; consider RFID-blocking wallets or sleeves. Fraudulent QR sticker overlays have been found on parking meters and at public venues \u2014 do not scan codes that appear to be stickers placed over official signage." },
+    { t:"Protests disrupting public transit", f:"u",
+      h:"Westminster Bridge, Parliament Square",
+      m:"Check Transport for London (TfL) updates; reroute around protest sites. The UK Electronic Travel Authorisation (ETA), enforced from February 2026, has added processing complexity at major entry points; allow extra time for border formalities." },
+    { t:"Phone snatching via moped and e-scooter crime", f:"n",
+      h:"Oxford Street, Shoreditch, South Bank, busy intersections across Zone 1",
+      m:"Keep phones stored when not in use and away from outdoor caf\u00e9 tables; use a grip strap when photographing near roadsides. London\u2019s Metropolitan Police recorded a significant surge in moped-enabled phone and handbag theft since 2025." },
+    { t:"Unlicensed minicab dangers",
+      h:"Outside bars in Soho, near train stations",
+      m:"Only use registered black cabs or trusted ride-hailing apps (e.g. Uber, Bolt); never accept rides from someone soliciting on the street." }
+  ]},
+
+  { name:"Edinburgh", code:"EDI", country:"United Kingdom", lat:55.953, lng:-3.188, risks:[
+    { t:"Pickpocketing during festivals and Royal Mile crowds",
+      h:"Royal Mile, Waverley Station, Fringe venues",
+      m:"Use secure bags with chest straps; avoid distractions during street performances." },
+    { t:"\u2018Dropped item\u2019 distraction scams",
+      h:"Princes Street, Scott Monument",
+      m:"Keep one hand on valuables when approached unexpectedly; walk away without engaging." },
+    { t:"Card fraud at outdoor ATMs",
+      h:"Outside pubs in Grassmarket, along George Street",
+      m:"Stick to bank-branch ATMs; inspect devices before inserting cards; don\u2019t accept help at machines." },
+    { t:"Fake guides offering ghost tours",
+      h:"Edinburgh Castle, Greyfriars Kirkyard",
+      m:"Only book through official visitor centres or your hotel; avoid cash-only, on-the-spot offers." },
+    { t:"Political protests related to independence movement",
+      h:"Holyrood Parliament, Calton Hill",
+      m:"Stay away from gatherings during marches or holidays; monitor BBC Scotland and local alerts." }
+  ]}
+];
+
+// ── Build popup HTML ────────────────────────────────────────────────────────
+function buildPopup(city) {
+  let html = `<div class="pw">
+    <p class="pc">${city.name} <span style="font-size:12px;font-weight:400;color:#888">(${city.code})</span></p>
+    <p class="pco">${city.country}</p>`;
+  city.risks.forEach(function(r, i) {
+    const cls   = r.f === 'u' ? 'u' : r.f === 'n' ? 'n' : '';
+    const badge = r.f === 'u' ? '<span class="badge bu">updated</span>'
+                : r.f === 'n' ? '<span class="badge bn">new</span>' : '';
+    html += `<div class="pr">
+      <div class="pn ${cls}">${i + 1}</div>
+      <div class="pt">
+        <div class="ptitle">${r.t}${badge}</div>
+        <div class="ph">${r.h}</div>
+        <div class="pm">${r.m}</div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+// ── Initialise map ──────────────────────────────────────────────────────────
+const map = L.map('map', { center: [50.5, 10.5], zoom: 4, minZoom: 3 });
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 18
+}).addTo(map);
+
+const pinIcon = L.divIcon({
+  className: '',
+  html: '<div style="width:13px;height:13px;border-radius:50%;background:#185FA5;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);"></div>',
+  iconSize: [13, 13],
+  iconAnchor: [6, 6]
+});
+
+cities.forEach(function(city) {
+  L.marker([city.lat, city.lng], { icon: pinIcon })
+    .addTo(map)
+    .bindPopup(buildPopup(city), { maxWidth: 360, minWidth: 320 });
+});
+
+// ── Legend ──────────────────────────────────────────────────────────────────
+const legend = L.control({ position: 'bottomright' });
+legend.onAdd = function() {
+  const div = L.DomUtil.create('div', 'legend');
+  div.innerHTML = `
+    <div class="legend-title">Risk legend</div>
+    <div class="legend-row"><span class="legend-swatch" style="background:#E6F1FB;border:1px solid #B5D4F4"></span>Unchanged</div>
+    <div class="legend-row"><span class="legend-swatch" style="background:#FAECE7;border:1px solid #F0997B"></span>&#9733; Updated</div>
+    <div class="legend-row"><span class="legend-swatch" style="background:#EAF3DE;border:1px solid #97C459"></span>&#9733; New (2026)</div>
+    <div class="legend-note">Click any pin to view risks</div>`;
+  return div;
+};
+legend.addTo(map);
+</script>
+</body>
+</html>
