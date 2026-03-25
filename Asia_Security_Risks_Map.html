@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asia Destination Security Risks &mdash; Updated March 2026</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; }
+  header { background: #fff; border-bottom: 1px solid #e0e0dc; padding: 14px 20px; display: flex; align-items: baseline; gap: 12px; }
+  header h1 { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  header span { font-size: 12px; color: #888; }
+  #map { width: 100%; height: calc(100vh - 49px); }
+  .leaflet-popup-content-wrapper { border-radius: 10px !important; box-shadow: 0 4px 20px rgba(0,0,0,0.14) !important; padding: 0 !important; }
+  .leaflet-popup-content { margin: 0 !important; }
+  .leaflet-popup-tip-container { margin-top: -1px; }
+  .pw { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; width: 340px; max-height: 480px; overflow-y: auto; padding: 14px 16px; }
+  .pw::-webkit-scrollbar { width: 4px; }
+  .pw::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+  .pc { font-size: 15px; font-weight: 600; color: #1a1a1a; margin: 0 0 2px; }
+  .pco { font-size: 12px; color: #888; margin: 0 0 10px; }
+  .pr { display: flex; gap: 9px; padding: 8px 0; border-top: 0.5px solid #e8e8e6; align-items: flex-start; }
+  .pn { font-size: 10px; font-weight: 600; color: #fff; background: #185FA5; border-radius: 50%; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .pn.u { background: #8B0000; }
+  .pn.n { background: #3B6D11; }
+  .pt { font-size: 12px; color: #1a1a1a; line-height: 1.45; }
+  .ptitle { font-weight: 600; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 500; border-radius: 3px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
+  .bu { background: #FAECE7; color: #993C1D; }
+  .bn { background: #EAF3DE; color: #3B6D11; }
+  .ph { font-size: 11px; color: #666; margin-top: 3px; }
+  .pm { font-size: 11px; color: #666; margin-top: 3px; font-style: italic; line-height: 1.45; }
+  .legend { background: #fff; border: 0.5px solid #ddd; border-radius: 8px; padding: 10px 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; line-height: 1.5; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+  .legend-title { font-weight: 600; margin-bottom: 7px; color: #1a1a1a; }
+  .legend-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; color: #555; }
+  .legend-row:last-of-type { margin-bottom: 0; }
+  .legend-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; }
+  .legend-note { margin-top: 8px; padding-top: 7px; border-top: 0.5px solid #e8e8e6; color: #888; font-size: 11px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Asia Destination Security Risks</h1>
+  <span>Updated March 20, 2026 &mdash; United Airlines destinations &mdash; Click any pin to view risks</span>
+</header>
+<div id="map"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+var cities = [
+
+  // INDIA
+  {name:"Delhi",code:"DEL",country:"India",lat:28.613,lng:77.209,risks:[
+    {t:"Pickpocketing and bag-snatching",h:"Chandni Chowk, Connaught Place, Rajiv Chowk Metro",m:"Use a secure crossbody bag with zippers, keep valuables out of sight, and avoid crowd surges during rush hours. Tourist Police are now deployed at major monuments and railway stations."},
+    {t:"Taxi/tuk-tuk scams",f:"u",h:"IGI Airport taxi stands, New Delhi Railway Station",m:"Pre-book rides via hotel or ride-hailing apps; confirm fare and route before boarding. UPI One World (expanded 2026) allows tourists from 40+ countries to make digital payments, removing cash scam risks."},
+    {t:"Sexual harassment in crowded areas",h:"Old Delhi lanes, crowded buses at peak times",m:"Travel in groups, dress conservatively, and decline unsolicited contact firmly but politely. Solo female travellers should use app-based transport rather than hailing cabs on the street."},
+    {t:"Terrorism risk in border and sensitive regions",f:"u",h:"Kashmir Valley and India-Pakistan border (Do Not Travel); large public gatherings in Delhi",m:"India is rated U.S. Level 2 (Exercise Increased Caution) nationally. In April 2025, a militant attack in Pahalgam, Kashmir, killed 26+ people including tourists. Avoid Jammu and Kashmir entirely. Stay alert near government buildings and follow embassy alerts."},
+    {t:"Scams by fake hotel porters and helpers",f:"u",h:"IGI Airport lounges, New Delhi Station lobby",m:"Use only hotel-arranged helpers, confirm charges upfront, and monitor baggage closely. Also beware of individuals claiming your pre-booked hotel is \u2018closed\u2019 or \u2018under renovation\u2019 \u2014 a known airport scam designed to redirect you to commission-paying properties."}
+  ]},
+
+  // JAPAN
+  {name:"Nagoya",code:"NGO",country:"Japan",lat:35.181,lng:136.906,risks:[
+    {t:"Bicycle theft",h:"Nagoya Station bike racks, Sakae district",m:"Lock bicycles with U-locks, park near staffed locations, or use secure paid bike parking."},
+    {t:"Pickpocketing during festivals",h:"Osu Kannon Temple market events",m:"Stay alert in crowds, avoid carrying large wallets, and leave valuables secured in your accommodation."},
+    {t:"Drink-spiking in nightlife",h:"Nishiki entertainment area",m:"Watch beverages continuously, stick with trusted companions, and be cautious of rounds you did not order."},
+    {t:"Tokury\u016b-linked fraud and social media scams",f:"u",h:"Fake investment websites promoted via social media; yami-baito (dark part-time job) recruitment",m:"Japan\u2019s tokury\u016b criminal networks use social media to recruit for fraud, home invasions, and robberies. Scam losses hit JPY 126.8 billion in 2024. Never click unsolicited investment links; never transfer money to unknown accounts; report suspicious approaches to the nearest police box (k\u014dban)."},
+    {t:"ATM skimming",h:"Convenience store ATMs near Sakae shopping malls",m:"Use ATMs inside major banks, inspect the machine for tampering, and shield the keypad when entering your PIN."}
+  ]},
+
+  {name:"Osaka",code:"KIX",country:"Japan",lat:34.693,lng:135.502,risks:[
+    {t:"Pickpocketing in nightlife zones",h:"Dotonbori, Namba nightlife district",m:"Carry wallets in front pockets, avoid distracted selfie moments, and stay in well-lit, crowded streets."},
+    {t:"Drink-spiking in hostess bars and izakayas",h:"Hostess bars and izakayas in Ura-Namba",m:"Keep an eye on your glass, avoid free drinks from strangers, and stay in groups. Victims have been taken to ATMs under duress or discovered large credit card charges."},
+    {t:"Tokury\u016b-linked home invasions and coordinated robberies",f:"n",h:"Residential hotels and short-term rentals; upscale shopping areas",m:"Japan\u2019s tokury\u016b networks have expanded into coordinated home invasions and smash-and-grab robberies, with 10,000+ arrests nationally in 2024. Groups specifically target foreigners perceived as wealthy. Keep rental accommodation addresses private on social media; use hotel safes for valuables; stay situationally aware when returning late at night."},
+    {t:"Fake monk or guide fee scams",h:"Shitennoji Temple entrance, Shinsaibashi",m:"Decline unsolicited offers of guidance and donations unless through licensed booths."},
+    {t:"ATM tampering",h:"Namba Station convenience store ATMs",m:"Use ATMs in banks or hotel lobbies, inspect card slots and PIN pads, and place a hand over your PIN entry."}
+  ]},
+
+  {name:"Tokyo",code:"HND/NRT",country:"Japan",lat:35.689,lng:139.692,risks:[
+    {t:"Drink-spiking in nightlife",f:"u",h:"Kabukicho (Shinjuku), Roppongi clubs",m:"Keep personal drinks in sight, stay with a trusted group, and avoid unmarked drinks. Victims have been forced to make ATM withdrawals and discovered large credit card charges. Approach a police box (k\u014dban) immediately if you feel unsafe."},
+    {t:"Pickpocketing in rush-hour trains",h:"Yamanote Line (Shibuya, Shinjuku stations)",m:"Use secure daypacks, stay alert in crowds, and sit or stand near doorways."},
+    {t:"Bar tout overcharging scams",f:"u",h:"Golden Gai, Roppongi, Kabukicho",m:"Visit established venues with verified pricing and check online reviews. Tokury\u016b networks operate some tout-to-bar setups where foreigners are presented with extortionate bills, sometimes with threats; if this occurs, contact police immediately (dial 110)."},
+    {t:"Tokury\u016b social media fraud targeting foreigners",f:"n",h:"SNS platforms (Instagram, Telegram, dating apps) operating nationwide",m:"Tokury\u016b criminal networks have sharply escalated social media-based scams since 2024, including fake investment offers, romance fraud, and \u2018yami-baito\u2019 (dark job) recruitment. Losses from social media investment scams hit JPY 126.8 billion in 2024. Never respond to investment opportunities from new online contacts; never meet social media acquaintances in private settings alone; report to the nearest k\u014dban or call 110."},
+    {t:"Fake guide or donation scams at popular shrines",h:"Senso-ji Temple, Meiji Shrine forecourt",m:"Ignore unsolicited guided tours; adhere only to official guides and booths."}
+  ]},
+
+  // SOUTH KOREA
+  {name:"Seoul",code:"ICN",country:"South Korea",lat:37.566,lng:126.978,risks:[
+    {t:"Pickpocketing in shopping areas",h:"Myeongdong, Namdaemun Market",m:"Use front-facing bags, avoid carrying large amounts of cash, and stay vigilant in dense shopping crowds where bumping and distractions are common."},
+    {t:"Drink-spiking in bars",h:"Itaewon, Hongdae districts",m:"Never leave your drink unattended, stick with trusted friends, and leave immediately if you feel disoriented or threatened."},
+    {t:"Taxi overcharging at airport",h:"Incheon International Airport\u2019s public taxi queue",m:"Use official taxis from designated stands, confirm approximate fares via apps like Kakao T, and ensure the driver activates the meter."},
+    {t:"Scams featuring fake monks or charities",h:"Insadong pedestrian area",m:"Politely refuse street solicitations, and donate only through recognised and registered organisations or temples."},
+    {t:"Protests and political demonstrations",f:"u",h:"Gwanghwamun Square, National Assembly (Yeouido), Seoul Western District Court, U.S. Embassy in Jongno-gu",m:"South Korea experienced a serious political crisis beginning December 2024 when President Yoon declared martial law for six hours; Yoon was arrested in January 2025, impeached in April 2025, and convicted on insurrection charges in February 2026. New President Lee Jae-myung is in office. Protests continue near Gwanghwamun and government buildings and can turn confrontational. Daily life and tourist activities are otherwise normal. Monitor Yonhap News or Korea Times, avoid demonstration zones, and use alternative routes if movement is restricted."}
+  ]},
+
+  // CHINA
+  {name:"Beijing",code:"PEK",country:"China",lat:39.905,lng:116.391,risks:[
+    {t:"Pickpocketing in crowded attractions",h:"Tiananmen Square, Forbidden City gateways",m:"Keep valuables in front-facing bags, carry only essentials, and avoid bulky backpacks that are easy to unzip unnoticed."},
+    {t:"Tea-house tour scams",h:"Wangfujing shopping street",m:"Refuse unsolicited invitations from strangers, especially friendly locals offering \u2018cultural experiences.\u2019 Stick to venues with posted menus and prices."},
+    {t:"Taxi meter fraud",h:"PEK airport, nightlife zones in Sanlitun",m:"Use official ride-hailing apps like DiDi, ensure the meter is on, and take a photo of the licence plate and driver ID when boarding."},
+    {t:"Fake police ID checks",h:"Tourist areas like Temple of Heaven",m:"Ask to see a proper police badge; refuse to hand over passports to anyone not in full uniform with visible credentials."},
+    {t:"Heightened surveillance and digital monitoring",f:"u",h:"Metro stations, large public events, near government buildings",m:"Always carry your passport (or certified copy), avoid taking photos of sensitive infrastructure, and stay away from political gatherings. Note: China-Japan diplomatic tensions escalated in late 2025. U.S.-China trade tensions in 2026 may create a heightened atmosphere; maintain a low profile. VPN usage is restricted \u2014 download required tools before arrival. Be aware that digital communications may be monitored."}
+  ]},
+
+  {name:"Shanghai",code:"PVG",country:"China",lat:31.230,lng:121.474,risks:[
+    {t:"Pickpocketing in pedestrian zones",h:"Nanjing Road pedestrian walkway, The Bund",m:"Keep bags zipped, avoid public distraction performances, and do not carry passports or large amounts of cash."},
+    {t:"Fake art exhibit scams",h:"People\u2019s Square near the museum district",m:"Politely decline invitations from strangers; verify events through your hotel or tourism board."},
+    {t:"Tea-house or karaoke bar price traps",h:"Yu Garden lanes, East Nanjing Road side streets",m:"Confirm pricing in writing before entering; avoid venues recommended by unsolicited \u2018guides.\u2019"},
+    {t:"Taxi rigging at airport",h:"PVG arrivals",m:"Only board taxis from official ranks, avoid touts, and take photos of ID placards displayed inside the cab."},
+    {t:"Heightened surveillance in public areas",f:"u",h:"Transit hubs, People\u2019s Square during holidays or events",m:"Be cautious about filming or photographing in public, carry ID at all times, and stay clear of crowds forming around political signs or performers. VPN usage is restricted in China \u2014 download required tools before arrival. Digital communications may be monitored."}
+  ]},
+
+  {name:"Hong Kong",code:"HKG",country:"China (SAR)",lat:22.328,lng:114.174,risks:[
+    {t:"Pickpocketing in MTR stations",h:"Mong Kok, Ladies Market, MTR platforms",m:"Keep bags zipped and close to your body, avoid using phones near escalators or in packed cars, and stay alert during boarding and exit rushes."},
+    {t:"Drink-spiking in nightlife districts",h:"Lan Kwai Fong alleyways",m:"Accept drinks only from bartenders you see prepare them, avoid leaving drinks unattended, and stick with friends throughout the night."},
+    {t:"Fake charity/monk scams",h:"Tsim Sha Tsui Promenade",m:"Decline donation requests unless from licensed booths or uniformed volunteers; avoid people who aggressively push for charity."},
+    {t:"National security restrictions on photography and public expression",f:"u",h:"Admiralty, Central, government buildings, courts, police stations",m:"Hong Kong\u2019s National Security Law (NSL) is actively enforced; photographing police operations, protests, or sensitive government areas may lead to detention. Avoid carrying materials that could be interpreted as anti-government. Do not post social media content critical of the HK or mainland Chinese government while in the territory. Follow the South China Morning Post for local updates."},
+    {t:"ATM skimmer risk",h:"Nathan Road and Tsim Sha Tsui ATMs",m:"Use ATMs inside banks or shopping malls, inspect card slots for tampering, and shield your PIN entry."}
+  ]},
+
+  // PHILIPPINES
+  {name:"Cebu",code:"CEB",country:"Philippines",lat:10.317,lng:123.891,risks:[
+    {t:"Pickpocketing at ferry terminals",h:"Pier 1, Carbon Market",m:"Keep valuables zipped in front pockets or money belts; avoid crowd clusters at terminals and travel light."},
+    {t:"Bag-snatching by motorcycle duos",h:"Colon Street and nearby alleys",m:"Use crossbody bags worn on the side opposite traffic; stay away from curb edges."},
+    {t:"ATM card skimming",h:"Machines at Mango Square",m:"Use ATMs inside reputable banks or hotels, inspect for abnormal parts, and cover the keypad while entering your PIN."},
+    {t:"Room theft in non-secure guesthouses",h:"Mactan beachfront budget lodgings",m:"Use lockboxes or safes, carry travel locks, and keep valuables out of sight even when indoors."},
+    {t:"Taxi overcharging or detours",h:"Mactan\u2013Cebu Airport pick-up lines",m:"Use apps like Grab, insist the meter be used, and note the driver\u2019s ID and plate number."}
+  ]},
+
+  {name:"Manila",code:"MNL",country:"Philippines",lat:14.599,lng:120.984,risks:[
+    {t:"Street robbery and snatch theft",h:"Ermita, Malate districts",m:"Stick to main roads at night, avoid walking alone, and carry minimal valuables."},
+    {t:"Express kidnappings",h:"Airport access roads",m:"Use official airport transport or hotel pickup; avoid unlicensed taxis; keep loved ones informed of your route."},
+    {t:"ATM skimming in hotel areas",h:"Makati district ATMs",m:"Favour machines inside hotels or banks, inspect ATM components for tampering, and shield your PIN."},
+    {t:"Fake \u2018police\u2019 roadside fines",h:"Quiapo Church area, major intersections",m:"Request ID and receipts; avoid paying cash; if concerned, call your embassy."},
+    {t:"Terrorism risk in Mindanao and southern islands",f:"u",h:"Sulu archipelago, Mindanao, Marawi area (Do Not Travel areas)",m:"The Philippines maintains a U.S. Level 2 advisory nationally; several Mindanao provinces and the Sulu archipelago are Level 4 (Do Not Travel). Avoid all travel to these regions. Even in Manila, maintain heightened awareness in crowded public spaces and near churches or shopping centres, which have historically been targeted."}
+  ]},
+
+  // TAIWAN
+  {name:"Kaohsiung",code:"KHH",country:"Taiwan",lat:22.627,lng:120.301,risks:[
+    {t:"Pickpocketing at transit stations",h:"Formosa Boulevard Station",m:"Keep bags front-facing, avoid distractions, and hold luggage close during boarding and transfers."},
+    {t:"Bag-snatching in scooter traffic",h:"Liuhe Night Market",m:"Use crossbody bags worn away from the street side; stay on pavements or in well-lit market aisles."},
+    {t:"Fake charity hustles",h:"Lotus Pond Temple area",m:"Donate only at marked temple donation boxes or through official QR codes; ignore anyone asking for cash donations directly."},
+    {t:"ATM skimming in convenience stores",h:"Near night market entrances",m:"Prefer ATMs in banks or hotels, check card slots for tampering, and always shield your PIN entry."},
+    {t:"Geopolitical tension and cross-strait security context",f:"u",h:"Major transport hubs, government buildings, military installations",m:"Taiwan faces ongoing pressure from the PRC, including regular PLA military exercises near Taiwan\u2019s airspace and maritime zones. Register with your embassy upon arrival, monitor Taiwan MOFA and home country travel advisories for rapid changes, and ensure travel insurance covers emergency evacuation."}
+  ]},
+
+  {name:"Taipei",code:"TPE",country:"Taiwan",lat:25.033,lng:121.565,risks:[
+    {t:"Pickpocketing in crowded night markets",h:"Shilin Night Market, Raohe Street Night Market",m:"Carry minimal cash, wear a zipped crossbody bag, and be alert for jostling or staged distractions like street performers."},
+    {t:"Bag-snatching by scooter riders",h:"Ximending pedestrian district, Zhongxiao East Road",m:"Walk with your bag away from traffic, avoid curb edges, and use crossbody bags with anti-snatch straps."},
+    {t:"Scams by fake monks and donation seekers",h:"Longshan Temple area, CKS Memorial Hall square",m:"Legitimate monks do not ask for money; walk away from unsolicited offers for blessings or tokens."},
+    {t:"ATM skimming and fraud",h:"ATMs near Taipei Main Station and shopping districts",m:"Use bank-based ATMs, check for loose components, and cover your keypad when entering your PIN."},
+    {t:"Cross-strait geopolitical risk affecting flights and communications",f:"u",h:"Taoyuan International Airport, government buildings, military zones",m:"PLA military exercises have repeatedly included simulated blockades of Taiwan\u2019s airspace and sea lanes. Flights may be cancelled or delayed at short notice during exercises. Register with your embassy, purchase comprehensive travel insurance with trip cancellation cover, and follow Taiwan MOFA advisories. Avoid photographing military installations."}
+  ]},
+
+  // THAILAND
+  {name:"Bangkok",code:"BKK",country:"Thailand",lat:13.756,lng:100.502,risks:[
+    {t:"Pickpocketing in markets and transit hubs",h:"Chatuchak Market, Siam BTS stations",m:"Use money belts or neck wallets, keep valuables zipped, and be wary of bumping or crowding near stalls and entrances."},
+    {t:"Gem/tuk-tuk scam tours",h:"Around Grand Palace",m:"Politely refuse unsolicited offers for tours or cheap gems; book through hotel desks or government-certified guides."},
+    {t:"Thailand Digital Arrival Card (TDAC) requirement and QR code fraud",f:"n",h:"All entry points; fake TDAC websites circulating online",m:"Since 1 May 2025, ALL non-Thai nationals must complete the free TDAC online within 72 hours before arrival at the OFFICIAL site tdac.immigration.go.th only. Third-party websites charge fees for this free service. Fake TDAC QR codes have been reported at airports and border crossings \u2014 only use the official immigration portal. Airlines may check your TDAC confirmation at check-in."},
+    {t:"Drink-spiking in nightlife zones",h:"Patpong and Silom nightlife alleyways",m:"Never accept drinks from strangers, keep your drink in hand, and watch for sudden drowsiness."},
+    {t:"Protests and Thailand\u2013Cambodia border conflict",f:"u",h:"Democracy Monument, Ratchadamnoen Avenue; eastern border provinces (Buriram, Si Saket, Sa Kaeo, Surin, Ubon Ratchathani, Chanthaburi, Trat)",m:"Follow local news and stay away from protest areas. CRITICAL: Armed clashes between Thai and Cambodian forces broke out 23 July 2025; a ceasefire was declared 27 December 2025 but the border remains closed and martial law is in effect in several eastern Thai districts. Avoid ALL travel within 50 km of the Thailand\u2013Cambodia border."}
+  ]},
+
+  // VIETNAM
+  {name:"Ho Chi Minh City",code:"SGN",country:"Vietnam",lat:10.823,lng:106.630,risks:[
+    {t:"Bag-snatching via motorbikes",f:"u",h:"Pham Ngu Lao Street, District 1 pavements",m:"Wear crossbody bags on the side away from traffic; stay alert on pavements near moving motorbikes. Phone snatching is the #1 complaint \u2014 never use your phone while standing at the curb; step inside a shop or face a wall. Bag snatching from motorcycles is extremely common in tourist-heavy areas."},
+    {t:"Pickpockets in crowded markets",h:"Ben Thanh Market area",m:"Keep bags zipped and in front, avoid using phones in dense crowds, and stay wary of staged distractions."},
+    {t:"Taxi meter manipulation",h:"Tan Son Nhat Airport taxi queues",m:"Use trusted companies like Mai Linh or Vinasun; ensure the meter is turned on; or use the Grab app for transparent fixed pricing. Count money carefully \u2014 the 20,000 VND note can be confused with the 500,000 VND note."},
+    {t:"ATM skimmer threats",h:"ATMs along Dong Khoi Street",m:"Favour ATMs inside banks or upscale hotels, inspect machines for tampering, and shield PIN entry."},
+    {t:"Bribe demands at police checkpoints",h:"Airport exit routes and major intersections",m:"Stay polite, request official documentation or a receipt, and consider involving your embassy or employer if pressured."}
+  ]},
+
+  // SINGAPORE
+  {name:"Singapore",code:"SIN",country:"Singapore",lat:1.352,lng:103.820,risks:[
+    {t:"Pickpocketing in malls and transport hubs",h:"Orchard Road, MRT stations",m:"Stay vigilant in packed areas, use front-facing bags, and avoid placing valuables in external backpack compartments."},
+    {t:"Bag theft in open-bar settings",h:"Clarke Quay riverside bars",m:"Avoid hanging bags on chairs or bar hooks; keep bags on your lap or between your feet."},
+    {t:"Online and investment scams targeting visitors",f:"u",h:"Fake investment platforms, romance scams via dating apps, phishing emails",m:"Singapore Police Force reports a sharp rise in online scam losses since 2024. Never invest via platforms recommended by new online contacts; ignore unsolicited messages offering investment opportunities or exclusive deals. Report scams to the ScamShield hotline 1799 or scamalert.sg."},
+    {t:"Unlicensed taxi fare manipulation",h:"Changi Airport cab stands, nightlife zones",m:"Use registered taxis or apps like Grab; verify fare before starting; avoid \u2018private ride\u2019 offers outside designated zones."},
+    {t:"Stringent law enforcement compliance",h:"Public spaces, transport hubs, parks",m:"Follow posted rules \u2014 no littering, no eating on trains, no smoking in public \u2014 or risk heavy fines. E-cigarettes (vapes) are banned; possession carries fines up to SGD 2,000. Drug trafficking carries the death penalty. Ignorance of local law is not accepted as a defence."}
+  ]}
+];
+
+function buildPopup(city) {
+  var html = '<div class="pw"><p class="pc">' + city.name +
+    ' <span style="font-size:12px;font-weight:400;color:#888">(' + city.code + ')</span></p>' +
+    '<p class="pco">' + city.country + '</p>';
+  city.risks.forEach(function(r, i) {
+    var cls = r.f === 'u' ? 'u' : r.f === 'n' ? 'n' : '';
+    var badge = r.f === 'u' ? '<span class="badge bu">updated</span>' : r.f === 'n' ? '<span class="badge bn">new</span>' : '';
+    html += '<div class="pr"><div class="pn ' + cls + '">' + (i+1) + '</div><div class="pt"><div class="ptitle">' + r.t + badge + '</div><div class="ph">' + r.h + '</div><div class="pm">' + r.m + '</div></div></div>';
+  });
+  return html + '</div>';
+}
+
+var map = L.map('map', {center:[20,110], zoom:3, minZoom:2});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {attribution:'&copy; <a href="https://carto.com/">CARTO</a>', subdomains:'abcd', maxZoom:18}).addTo(map);
+var pinIcon = L.divIcon({className:'', html:'<div style="width:13px;height:13px;border-radius:50%;background:#185FA5;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);"></div>', iconSize:[13,13], iconAnchor:[6,6]});
+cities.forEach(function(c){ L.marker([c.lat,c.lng],{icon:pinIcon}).addTo(map).bindPopup(buildPopup(c),{maxWidth:360,minWidth:320}); });
+var legend = L.control({position:'bottomright'});
+legend.onAdd = function() {
+  var div = L.DomUtil.create('div','legend');
+  div.innerHTML = '<div class="legend-title">Risk legend</div><div class="legend-row"><span class="legend-swatch" style="background:#E6F1FB;border:1px solid #B5D4F4"></span>Unchanged</div><div class="legend-row"><span class="legend-swatch" style="background:#FAECE7;border:1px solid #F0997B"></span>&#9733; Updated</div><div class="legend-row"><span class="legend-swatch" style="background:#EAF3DE;border:1px solid #97C459"></span>&#9733; New (2026)</div><div class="legend-note">Click any pin to view risks</div>';
+  return div;
+};
+legend.addTo(map);
+</script>
+</body>
+</html>
