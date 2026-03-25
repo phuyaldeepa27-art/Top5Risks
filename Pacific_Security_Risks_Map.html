@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pacific Destination Security Risks &mdash; Updated March 2026</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; }
+  header { background: #fff; border-bottom: 1px solid #e0e0dc; padding: 14px 20px; display: flex; align-items: baseline; gap: 12px; }
+  header h1 { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  header span { font-size: 12px; color: #888; }
+  #map { width: 100%; height: calc(100vh - 49px); }
+  .leaflet-popup-content-wrapper { border-radius: 10px !important; box-shadow: 0 4px 20px rgba(0,0,0,0.14) !important; padding: 0 !important; }
+  .leaflet-popup-content { margin: 0 !important; }
+  .leaflet-popup-tip-container { margin-top: -1px; }
+  .pw { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; width: 340px; max-height: 480px; overflow-y: auto; padding: 14px 16px; }
+  .pw::-webkit-scrollbar { width: 4px; }
+  .pw::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+  .pc { font-size: 15px; font-weight: 600; color: #1a1a1a; margin: 0 0 2px; }
+  .pco { font-size: 12px; color: #888; margin: 0 0 10px; }
+  .pr { display: flex; gap: 9px; padding: 8px 0; border-top: 0.5px solid #e8e8e6; align-items: flex-start; }
+  .pn { font-size: 10px; font-weight: 600; color: #fff; background: #185FA5; border-radius: 50%; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .pn.u { background: #8B0000; }
+  .pn.n { background: #3B6D11; }
+  .pt { font-size: 12px; color: #1a1a1a; line-height: 1.45; }
+  .ptitle { font-weight: 600; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 500; border-radius: 3px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
+  .bu { background: #FAECE7; color: #993C1D; }
+  .bn { background: #EAF3DE; color: #3B6D11; }
+  .ph { font-size: 11px; color: #666; margin-top: 3px; }
+  .pm { font-size: 11px; color: #666; margin-top: 3px; font-style: italic; line-height: 1.45; }
+  .legend { background: #fff; border: 0.5px solid #ddd; border-radius: 8px; padding: 10px 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; line-height: 1.5; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+  .legend-title { font-weight: 600; margin-bottom: 7px; color: #1a1a1a; }
+  .legend-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; color: #555; }
+  .legend-row:last-of-type { margin-bottom: 0; }
+  .legend-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; }
+  .legend-note { margin-top: 8px; padding-top: 7px; border-top: 0.5px solid #e8e8e6; color: #888; font-size: 11px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Pacific Destination Security Risks</h1>
+  <span>Updated March 20, 2026 &mdash; United Airlines destinations &mdash; Click any pin to view risks</span>
+</header>
+<div id="map"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+var cities = [
+  {name:"Adelaide",code:"ADL",country:"Australia",lat:-34.929,lng:138.601,risks:[
+    {t:"Needle spiking in nightlife districts",h:"Hindley Street, Rundle Street",m:"Stick with trusted companions, avoid accepting drinks from strangers, and report any suspicious symptoms promptly."},
+    {t:"Theft from parked vehicles",h:"Glenelg Beach parking lots, Adelaide Central Market garages",m:"Do not leave valuables in plain view, always lock your vehicle, and use secure car parks with surveillance."},
+    {t:"Opportunistic hotel room theft",h:"Budget accommodations near North Terrace",m:"Use in-room safes, double-lock doors, and avoid leaving valuables unattended in shared or unsecured rooms."},
+    {t:"Rental scam listings targeting visitors",h:"Online platforms for temporary housing in CBD",m:"Use reputable rental platforms with verified hosts and reviews; avoid transferring funds outside of the platform."},
+    {t:"Political protests near government buildings",h:"Parliament House, Victoria Square",m:"Monitor local news and avoid protest routes, especially during national or Indigenous rights demonstrations."}
+  ]},
+  {name:"Brisbane",code:"BRS",country:"Australia",lat:-27.469,lng:153.025,risks:[
+    {t:"Alcohol-fuelled assaults in entertainment areas",h:"Fortitude Valley, Caxton Street",m:"Avoid confrontations, stay in well-lit areas, and pace alcohol consumption in nightlife settings."},
+    {t:"Bag-snatching and pickpocketing",h:"Queen Street Mall, South Bank Parklands",m:"Use zipped, crossbody bags; keep wallets and phones close to your body; avoid placing items on tables."},
+    {t:"Cyber scams targeting tourists and students",h:"Online Wi-Fi networks near universities and hostels",m:"Use a VPN on public Wi-Fi and avoid sharing sensitive data when connected to unsecured networks."},
+    {t:"ATM skimming in transit corridors",h:"Roma Street Station, Central Station ATMs",m:"Prefer bank branch ATMs, inspect for unusual attachments, and shield PIN input."},
+    {t:"Protest-related blockades",h:"King George Square, George Street outside Queensland Parliament",m:"Check ABC Brisbane for civil action announcements; avoid dense gatherings."}
+  ]},
+  {name:"Melbourne",code:"MEL",country:"Australia",lat:-37.814,lng:144.963,risks:[
+    {t:"Knife-related assaults in nightlife zones",h:"King Street, Flinders Lane after dark",m:"Stick to populated areas, avoid lingering near clubs at closing time, and steer clear of disputes."},
+    {t:"Theft in trams and shopping arcades",h:"Bourke Street Mall, Flinders Street Station",m:"Stay aware in crowded trams, keep bags closed and in front, and avoid distractions like street performers."},
+    {t:"Drink tampering and illicit vape risk in backpacker bars",f:"u",h:"Fitzroy, Chapel Street bars",m:"Keep drinks within sight, only accept beverages from the bar directly, and report suspicious behaviour. Australia\u2019s 2024 ban on non-therapeutic vape sales has created an organised crime black market, fuelling petrol bombings, shootings and extortion in suburban Melbourne. Vapes laced with nitazenes (synthetic opioids) have caused hospitalisations; never accept vapes from strangers."},
+    {t:"Card skimming at freestanding ATMs",h:"Lygon Street, Elizabeth Street",m:"Use indoor ATMs, monitor bank statements, and shield your PIN during transactions."},
+    {t:"Protests disrupting traffic and public access",h:"Federation Square, Parliament House on Spring Street",m:"Use navigation apps to avoid congestion; monitor public transport announcements."}
+  ]},
+  {name:"Sydney",code:"SYD",country:"Australia",lat:-33.869,lng:151.209,risks:[
+    {t:"Theft from rental vehicles and parked cars",h:"Bondi Beach, Darling Harbour car parks",m:"Keep valuables out of sight; use secure hotel lots and avoid leaving luggage in rental cars."},
+    {t:"Drink and vape spiking in bars and clubs",f:"u",h:"Kings Cross, Newtown, and Oxford Street",m:"Watch your drinks, avoid shared vapes, and stay with friends you trust in nightlife zones. Australia\u2019s illicit vape black market has produced vapes laced with nitazenes and other dangerous substances; between 2018 and 2025, 11 hospitalisations in NSW were linked to vapes containing nitazenes. Do not accept vapes from strangers under any circumstances."},
+    {t:"Contactless card fraud at kiosks",h:"Circular Quay and Paddy\u2019s Market card terminals",m:"Use cash at unfamiliar kiosks, activate transaction alerts, and store tap-enabled cards in RFID sleeves."},
+    {t:"Online accommodation scams targeting short-term visitors",h:"Listings near CBD, Coogee, and Manly",m:"Use trusted rental platforms only, verify listings, and avoid wire transfers."},
+    {t:"Protest disruptions tied to environmental and labour issues",h:"Town Hall, Martin Place",m:"Track protests via SBS News or The Sydney Morning Herald; avoid blocked roadways or police cordons."}
+  ]},
+  {name:"Auckland",code:"AKL",country:"New Zealand",lat:-36.848,lng:174.763,risks:[
+    {t:"Theft from parked or rental cars",h:"Mount Eden lookout, Auckland Domain, Takapuna Beach lots",m:"Do not leave bags visible in parked cars; use hotel parking where available and avoid isolated lots."},
+    {t:"Scam approaches targeting tourists",h:"Queen Street, Viaduct Harbour",m:"Avoid giving personal info to street solicitors or fake \u2018survey\u2019 agents. Only book tours through official vendors."},
+    {t:"Card skimming at unattended fuel stations",h:"West Auckland self-service pumps, CBD outskirts",m:"Use staffed fuel stations; check for tampering; enable transaction notifications with your bank."},
+    {t:"Drink tampering in clubs and bars",h:"Ponsonby Road, Karang\u0101hape Road (K\u2019 Road)",m:"Don\u2019t accept drinks from strangers, monitor yours at all times, and travel with a trusted group."},
+    {t:"NZeTA entry requirement and protest congestion",f:"u",h:"Aotea Square, Albert Park; Auckland International Airport arrivals",m:"Visa-waiver visitors (including U.S. citizens) must obtain an NZeTA (Electronic Travel Authorisation) before travel to New Zealand \u2014 apply online well before your departure date; failure to hold one can result in denied boarding. For local disruptions, follow alerts via Stuff.co.nz or NZ Herald; avoid rally areas and use alternative transport routes."}
+  ]},
+  {name:"Christchurch",code:"CHC",country:"New Zealand",lat:-43.532,lng:172.637,risks:[
+    {t:"Isolated violent incidents in nightlife areas",h:"Victoria Street and The Terrace bars",m:"Avoid arguments in nightlife settings, travel in groups after dark, and pre-arrange transport."},
+    {t:"Theft from unattended bags in caf\u00e9s and parks",h:"Botanic Gardens, Cathedral Square, Cashel Street eateries",m:"Keep belongings in sight, use anti-theft bags, and avoid hanging them off chairs."},
+    {t:"Door-to-door or parking lot scam attempts",h:"Suburban areas near Addington and Riccarton",m:"Avoid unsolicited interactions or \u2018charity\u2019 donation requests outside stores or gas stations."},
+    {t:"ATM skimming incidents near campus zones",h:"Lincoln University and University of Canterbury adjacent shops",m:"Prefer indoor ATMs, review card slots for unusual features, and hide your keypad input."},
+    {t:"Marches and civil gatherings related to environmental activism",h:"Cathedral Square, Christchurch Art Gallery",m:"Check local event calendars, steer clear of dense crowds, and follow police instructions if nearby."}
+  ]},
+  {name:"Koror",code:"KOR",country:"Palau",lat:7.341,lng:134.479,risks:[
+    {t:"Opportunistic theft from unlocked hotel rooms",h:"Budget guesthouses along Main Street and around Malakal Island",m:"Use safes when available, keep valuables out of sight, and ensure doors and windows are locked when away."},
+    {t:"Credit card misuse and overcharging at small vendors",h:"Local tour booths, souvenir shops in Koror town",m:"Pay in cash when possible, review receipts before signing, and check for duplicate charges on your statement."},
+    {t:"Tour scam attempts targeting new arrivals",h:"Koror ferry port and airport arrivals area",m:"Book tours and transfers through your hotel or official operators. Avoid paying cash up front to unsolicited guides."},
+    {t:"Community curfew and traditional access restrictions",f:"u",h:"Palau National Congress, Long Island Park; Koror, Airai, and Ngarchelong communities",m:"Traditional leaders in parts of Palau including Koror, Airai, and Ngarchelong enforce a community curfew between midnight and 5 am; police can uphold it. Respect local customs and remain low-key if out late. Follow updates via the Palau Visitors Authority for any restricted marine or conservation areas."},
+    {t:"Unauthorised boat tour operations and limited medical evacuation",h:"Rock Islands tour departure docks",m:"Verify the company\u2019s licence before booking; prioritise guides affiliated with the Palau Visitors Authority. Serious medical emergencies in Palau typically require evacuation to Guam or the Philippines at significant cost; ensure travel insurance explicitly covers medical evacuation."}
+  ]},
+  {name:"Yap",code:"YAP",country:"Federated States of Micronesia",lat:9.514,lng:138.130,risks:[
+    {t:"Theft of unattended personal items",h:"Colonia town markets, beaches near Kaday Village",m:"Keep valuables with you, especially when swimming or touring; avoid leaving gear unsecured."},
+    {t:"Aggressive solicitation for unofficial tours",h:"Colonia Port and ferry arrival points",m:"Politely decline unsolicited tour offers; pre-book only through hotel-recommended services."},
+    {t:"Boat rental disputes and overcharging",h:"Dive tour operators in Maap and Gagil",m:"Request itemised pricing, confirm duration and inclusions, and avoid paying fully in advance."},
+    {t:"Community-led roadblocks during land disputes",h:"Road to the Stone Money banks, southern coastal roads",m:"Respect road closures, avoid confrontation, and seek alternative travel routes."},
+    {t:"Limited response to cybercrime or scams",h:"Internet caf\u00e9s and community centres with open access",m:"Avoid accessing sensitive accounts on public machines, and do not share passwords or bank data."}
+  ]},
+  {name:"Chuuk",code:"TKK",country:"Federated States of Micronesia",lat:7.447,lng:151.848,risks:[
+    {t:"Petty crime targeting foreigners",h:"Weno Island near Blue Lagoon Resort",m:"Travel in groups, avoid walking at night, and secure personal items at your accommodation."},
+    {t:"Card fraud at roadside vendors",h:"Around Tonoas and Weno Town shops",m:"Use cash for purchases, monitor transactions, and be wary of handheld payment devices."},
+    {t:"Unauthorised guides offering wreck diving tours",h:"Chuuk Lagoon dive centres",m:"Choose certified dive operations with clear pricing; ask to see safety certifications."},
+    {t:"Theft from dive boats or gear lockers",h:"Near Truk Stop Hotel and dockside dive areas",m:"Avoid leaving phones or wallets on boats; bring dry bags or leave items locked in your hotel."},
+    {t:"Political or community protests over land and infrastructure",h:"Weno municipal buildings",m:"Stay updated through your accommodation, avoid protest gatherings, and respect local sensitivities."}
+  ]},
+  {name:"Pohnpei",code:"PNI",country:"Federated States of Micronesia",lat:6.854,lng:158.185,risks:[
+    {t:"Pickpocketing in markets and festivals",h:"Kolonia main market and street parades",m:"Use crossbody bags with zippers and keep them close; avoid displaying phones and wallets."},
+    {t:"Scam transportation or \u2018unofficial\u2019 taxi services",h:"Airport pickup area, inter-village minivan stops",m:"Arrange rides in advance through hotels or registered companies."},
+    {t:"ATM skimming incidents",h:"Near the main Bank of FSM branch in Kolonia",m:"Use indoor ATMs when possible, inspect for suspicious attachments, and cover your PIN."},
+    {t:"Local protests over governance issues",h:"State Capitol Complex, Kolonia Town",m:"Avoid political demonstrations, and follow guidance from local officials or hotel staff."},
+    {t:"Water-related equipment thefts",h:"Diving and snorkelling launch points in Sokehs and Nett",m:"Lock equipment when unattended; avoid leaving items onshore without supervision."}
+  ]},
+  {name:"Kosrae",code:"KSA",country:"Federated States of Micronesia",lat:5.310,lng:162.981,risks:[
+    {t:"Theft of items from beaches and parked scooters",h:"Utwe and Lelu beaches",m:"Do not leave bags or valuables unattended while swimming; park scooters in sight."},
+    {t:"Double-charging at family-run guesthouses",h:"Lelu Island inns and lodges",m:"Request printed receipts, pay in cash when possible, and verify all room charges at checkout."},
+    {t:"Unofficial tour guide scams",h:"Coastal rainforest trailheads",m:"Verify guides through your lodge or the Kosrae Visitors Bureau; never pay upfront to unverified individuals."},
+    {t:"Local land protests affecting access",h:"Finkol River and Utwe Biosphere areas",m:"Avoid entering disputed land areas; respect signage and seek local guidance."},
+    {t:"Poor digital security infrastructure",h:"Open Wi-Fi networks at caf\u00e9s and community centres",m:"Avoid online banking or entering sensitive data; use a VPN and disable auto-connect."}
+  ]},
+  {name:"Guam",code:"GUM",country:"United States Territory",lat:13.444,lng:144.794,risks:[
+    {t:"Property theft and car break-ins near tourist zones",h:"Tumon Bay, Two Lovers Point parking area",m:"Do not leave belongings visible in vehicles; use hotel shuttles or secure lots; report suspicious activity promptly."},
+    {t:"Card skimming at gas stations and convenience stores",h:"Stations in Tamuning and Dededo",m:"Use chip-enabled cards, check card readers for tampering, and prefer bank-owned terminals when available."},
+    {t:"Unregulated tour and taxi scams",h:"Antonio B. Won Pat International Airport, Micronesia Mall",m:"Arrange transfers via hotel or licensed operators. Verify ID and pricing before boarding."},
+    {t:"Heightened military presence and associated geopolitical risks",f:"u",h:"Andersen Air Force Base perimeter, Naval Base Guam, Latte Stone Park, Hag\u00e5t\u00f1a government offices",m:"Ongoing U.S. military construction (Marine Corps Base Camp Blaz, Andersen AFB runway hardening, Naval Base Guam upgrades) and heightened U.S.\u2013China Indo-Pacific tensions have elevated Guam\u2019s strategic profile significantly. Secretary of Defense Hegseth visited Guam in March 2025, calling it \u2018the tip of America\u2019s spear.\u2019 Military exercises such as Sea Dragon 2026 are ongoing as of March 2026. Stay well clear of all military installation perimeters. Monitor Guam Daily Post or local radio for protest activity near naval or government areas."},
+    {t:"Opportunistic theft at beaches",h:"Ypao Beach, Ritidian Point",m:"Do not leave valuables unattended; use dry bags; swim in view of your group."}
+  ]},
+  {name:"Kwajalein",code:"KWA",country:"Marshall Islands",lat:8.720,lng:167.733,risks:[
+    {t:"Restricted movement and checkpoint searches",h:"U.S. military-controlled areas on Kwajalein Atoll",m:"Always carry identification, adhere to posted access rules, and avoid restricted zones unless authorised."},
+    {t:"Interpersonal disputes escalating into public confrontations",h:"Ebeye town square, ferry landing areas",m:"Avoid verbal disputes, especially involving locals or ferry staff; maintain respectful behaviour."},
+    {t:"ATM unreliability and fraud potential",h:"Ebeye shops and standalone kiosks",m:"Use cash for daily transactions; confirm charges in person; withdraw inside major establishments when possible."},
+    {t:"Boat and bicycle theft from docks",h:"Ebeye pier, Marshall Islands Shipping docks",m:"Lock or secure all personal equipment; do not leave unattended items during departures."},
+    {t:"Civil protests over housing and water access",h:"Ebeye housing areas and administration offices",m:"Follow local alerts, avoid large gatherings, and remain cooperative during crowd control measures."}
+  ]},
+  {name:"Majuro",code:"MAJ",country:"Marshall Islands",lat:7.089,lng:171.380,risks:[
+    {t:"Petty theft in market zones",h:"Delap Fresh Market, Uliga Dock area",m:"Keep wallets and phones close, carry a crossbody bag, and avoid showing large sums of cash."},
+    {t:"Credit card cloning at small vendors",h:"Local grocery and general stores in Rita and Uliga",m:"Use cash whenever possible; monitor accounts; do not allow card out of sight during payment."},
+    {t:"\u2018Taxi pooling\u2019 scams or overcharges",h:"Majuro Airport arrivals and Rita main road",m:"Confirm rates ahead of time and avoid taxis without plates or signs. Ride with companions when possible."},
+    {t:"Demonstrations around parliament sessions",h:"Nitijela Parliament building, downtown Delap",m:"Stay clear of political gatherings and do not engage with protest groups. Monitor updates via V7AB Radio."},
+    {t:"Water gear and outboard engine theft",h:"Majuro Lagoon piers and dive shops",m:"Secure boating or diving equipment overnight and log serial numbers."}
+  ]}
+];
+
+function buildPopup(city) {
+  var html = '<div class="pw"><p class="pc">' + city.name +
+    ' <span style="font-size:12px;font-weight:400;color:#888">(' + city.code + ')</span></p>' +
+    '<p class="pco">' + city.country + '</p>';
+  city.risks.forEach(function(r, i) {
+    var cls = r.f === 'u' ? 'u' : r.f === 'n' ? 'n' : '';
+    var badge = r.f === 'u' ? '<span class="badge bu">updated</span>' : r.f === 'n' ? '<span class="badge bn">new</span>' : '';
+    html += '<div class="pr"><div class="pn ' + cls + '">' + (i+1) + '</div><div class="pt"><div class="ptitle">' + r.t + badge + '</div><div class="ph">' + r.h + '</div><div class="pm">' + r.m + '</div></div></div>';
+  });
+  return html + '</div>';
+}
+
+var map = L.map('map', {center:[-10,160], zoom:3, minZoom:2});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {attribution:'&copy; <a href="https://carto.com/">CARTO</a>', subdomains:'abcd', maxZoom:18}).addTo(map);
+var pinIcon = L.divIcon({className:'', html:'<div style="width:13px;height:13px;border-radius:50%;background:#185FA5;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);"></div>', iconSize:[13,13], iconAnchor:[6,6]});
+cities.forEach(function(c){ L.marker([c.lat,c.lng],{icon:pinIcon}).addTo(map).bindPopup(buildPopup(c),{maxWidth:360,minWidth:320}); });
+var legend = L.control({position:'bottomright'});
+legend.onAdd = function() {
+  var div = L.DomUtil.create('div','legend');
+  div.innerHTML = '<div class="legend-title">Risk legend</div><div class="legend-row"><span class="legend-swatch" style="background:#E6F1FB;border:1px solid #B5D4F4"></span>Unchanged</div><div class="legend-row"><span class="legend-swatch" style="background:#FAECE7;border:1px solid #F0997B"></span>&#9733; Updated</div><div class="legend-row"><span class="legend-swatch" style="background:#EAF3DE;border:1px solid #97C459"></span>&#9733; New (2026)</div><div class="legend-note">Click any pin to view risks</div>';
+  return div;
+};
+legend.addTo(map);
+</script>
+</body>
+</html>
